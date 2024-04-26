@@ -10,11 +10,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 @SpringBootApplication
 @Slf4j
 public class DemoApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
-
 
     // Checking that Kafka message can be received
     // In reality, will be received by a different service
