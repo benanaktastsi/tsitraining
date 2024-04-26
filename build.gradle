@@ -22,6 +22,8 @@ dependencies {
 	implementation group: 'com.ibm.jsonata4java', name: 'JSONata4Java', version: '2.4.9'
 	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.32'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.dashjoin:jsonata:0.9.6'
+	implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 tasks.named('test') {
