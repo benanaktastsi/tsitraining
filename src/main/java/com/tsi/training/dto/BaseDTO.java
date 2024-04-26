@@ -3,9 +3,6 @@ package com.tsi.training.dto;
 import lombok.Data;
 
 @Data
-public class PartDto {
-
+public class BaseDTO {
     private Long id;
-    private String description;
-    private Float price;
 }
