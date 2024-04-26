@@ -9,6 +9,7 @@ import javax.persistence.Id;
 @Data
 public class Dealer {
 
-    @Id private Long id;
-        private String description;
+    @Id
+    private Long id;
+    private String description;
 }

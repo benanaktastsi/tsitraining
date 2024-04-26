@@ -10,7 +10,8 @@ import javax.persistence.Id;
 @Data
 public class Part {
 
-    @Id private Long id;
-        private String description;
-        private Float price;
+    @Id
+    private Long id;
+    private String description;
+    private Float price;
 }
