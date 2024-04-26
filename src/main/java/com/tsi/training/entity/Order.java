@@ -1,7 +1,7 @@
 package com.tsi.training.entity;
 
-import com.tsi.training.data.PartId;
-import com.tsi.training.data.SystemType;
+import com.tsi.training.dto.PartId;
+import com.tsi.training.dto.SystemType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;

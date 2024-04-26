@@ -1,6 +1,6 @@
 package com.tsi.training.entity;
 
-import com.tsi.training.data.Contact;
+import com.tsi.training.dto.Contact;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
 import org.hibernate.annotations.Type;
