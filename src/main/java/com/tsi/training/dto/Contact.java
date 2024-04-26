@@ -1,8 +1,6 @@
-package com.tsi.training.data;
+package com.tsi.training.dto;
 
 import lombok.Data;
-
-import java.util.Optional;
 
 @Data
 public class Contact {
