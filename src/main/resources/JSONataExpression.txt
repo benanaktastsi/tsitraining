@@ -1,0 +1,13 @@
+orders@$order.{
+    "DealerDescription": dealers[id=$order.dealerId].description,
+    "OrderReference": $order.reference,
+    "OrderDate": $order.orderDate,
+    "CustomerName": customer[id=$order.customerId].(firstName & " " & surname),
+    "Mobile": customer[id=$order.customerId].contact[0].mobile,
+    "Postcode": customer[id=$order.customerId].postCode,
+    "Parts": $order.partIds@$part.{
+        "Price": $$.parts[id=$part.id].price,
+        "ProposedDate": $part.propsedDeliveryDate,
+        "PartDescription": $$.parts[id=$part.id].description
+    }
+}
