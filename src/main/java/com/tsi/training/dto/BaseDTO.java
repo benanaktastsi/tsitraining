@@ -2,7 +2,8 @@ package com.tsi.training.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class BaseDTO {
-    private Long id;
+public class BaseDTO implements Serializable {
 }
