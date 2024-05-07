@@ -1,22 +1,22 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.10'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '2.7.10'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 ext {
-	mapstructVersion = "1.6.0.Beta1"
-	lombokVersion = "1.18.30"
-	lombokMapstructBindingVersion = "0.2.0"
+    mapstructVersion = "1.6.0.Beta1"
+    lombokVersion = "1.18.30"
+    lombokMapstructBindingVersion = "0.2.0"
 }
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '11'
+    sourceCompatibility = '11'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
@@ -24,25 +24,21 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.kafka:spring-kafka'
-	  implementation 'com.dashjoin:jsonata:0.9.6'
-	  implementation 'com.google.code.gson:gson:2.10.1'
-
-
-
+    implementation 'com.dashjoin:jsonata:0.9.6'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
     implementation group: 'com.ibm.jsonata4java', name: 'JSONata4Java', version: '2.4.9'
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-5', version: '2.21.1'
-	implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
-	implementation group: 'org.projectlombok', name: 'lombok-mapstruct-binding', version: '0.2.0'
-	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
-	annotationProcessor("org.projectlombok:lombok")
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+    testImplementation 'junit:junit:4.13.1'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 
 compileJava {
-	options.compilerArgs = [
-			'-Amapstruct.defaultComponentModel=spring'
-	]
+    options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
 }
