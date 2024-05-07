@@ -4,72 +4,66 @@ import com.tsi.training.dto.PartDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
-import com.tsi.training.request.PartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PartService implements IPartService {
-    @Autowired
-    PartRepository partRepository;
+
+    private final PartRepository partRepository;
+    private final PartMapper partMapper;
 
     @Autowired
-    PartMapper mapper;
+    public PartService(PartRepository partRepository, PartMapper partMapper) {
+        this.partRepository = partRepository;
+        this.partMapper = partMapper;
+    }
 
+    @Override
     public List<PartDTO> getAllParts() {
         List<Part> parts = partRepository.findAll();
-
-        return mapper.toDto(parts);
+        return partMapper.toDto(parts);
     }
 
+    @Override
     public PartDTO getPartById(Long id) {
-        Optional<Part> part = partRepository.findById(id);
-
-        if (part.isPresent()) {
-            return mapper.toDto(part.get());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Part with id %d does not exist.", id));
-        }
-    }
-
-    public PartDTO createPart(PartRequest request) {
-        final Part part = new Part(request);
-        final Part createdPart = partRepository.save(part);
-
-        return mapper.toDto(createdPart);
-    }
-
-    public PartDTO updatePart(Long id, PartRequest request) {
         Part part = partRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Part with id %d does not exist.", id)));
-
-        part.setDescription(request.description);
-        part.setPrice(request.price);
-
-        final Part updatedPart = partRepository.save(part);
-        return mapper.toDto(updatedPart);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
+        return partMapper.toDto(part);
     }
 
+    @Override
+    public PartDTO createPart(PartDTO request) {
+        Part part = partMapper.toEntity(request);
+        Part createdPart = partRepository.save(part);
+        return partMapper.toDto(createdPart);
+    }
+
+    @Override
+    public PartDTO updatePart(Long id, PartDTO request) {
+        Part existingPart = partRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
+        partMapper.toEntity(request, existingPart);
+        Part updatedPart = partRepository.save(existingPart);
+        return partMapper.toDto(updatedPart);
+    }
+
+    @Override
     public void deletePart(Long id) {
-        final boolean partExists = partRepository.existsById(id);
-        if (partExists) {
-            partRepository.deleteById(id);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Part with id %d does not exist.", id));
+        if (!partRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found");
         }
+        partRepository.deleteById(id);
     }
 
+    @Override
     public PartDTO getPartByDescription(String description) {
-        Optional<Part> part = partRepository.findByDescription(description);
-        if (part.isPresent()) {
-            return mapper.toDto(part.get());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Part with description %s does not exist.", description));
-        }
+        Part part = partRepository.findByDescription(description)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
+        return partMapper.toDto(part);
     }
 }
