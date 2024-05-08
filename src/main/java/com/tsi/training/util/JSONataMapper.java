@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.dto.response.OrderItemDTO;
+import org.springframework.kafka.annotation.KafkaListener;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -76,5 +77,16 @@ public class JSONataMapper {
         return result.stream()
                 .map(JSONataMapper::fromLinkedHashMap)
                 .collect(Collectors.toList());
+    }
+
+    @KafkaListener(topics="Message")
+    public static void receiveKafkaMessage(String message){
+        Path filePath = Path.of("./src/main/resources/)" + message);
+        try {
+            String input = Files.readString(filePath, Charset.defaultCharset());
+            List<OrderDTO> orders = map(input);
+        } catch (IOException exception){
+            //TODO
+        }
     }
 }
