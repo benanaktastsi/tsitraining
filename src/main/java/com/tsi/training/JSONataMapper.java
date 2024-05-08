@@ -24,15 +24,6 @@ public class JSONataMapper {
     private static final Path expressionPath = Path.of("./src/main/resources/JSONataExpression.txt");
     //private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public static void main(String[] arg){
-        try {
-            String test = Files.readString(Path.of("./src/main/resources/input.json"), Charset.defaultCharset());
-            System.out.println(map(test));
-        } catch (IOException e){
-            System.out.println("err");
-        }
-    }
-
     private static OrderDTO fromLinkedHashMap(LinkedHashMap<String, Object> input){
         OrderDTO output = new OrderDTO();
 
