@@ -1,9 +1,14 @@
 package com.tsi.training.service;
 
-import com.tsi.training.entity.Part;
+import com.tsi.training.dto.PartDTO;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface IPartService {
-    Optional<Part> getPartByDescription(String description);
+    List<PartDTO> getAllParts();
+    PartDTO getPartById(Long id);
+    PartDTO createPart(PartDTO request);
+    PartDTO updatePart(Long id, PartDTO request);
+    void deletePart(Long id);
+    PartDTO getPartByDescription(String description);
 }
