@@ -57,7 +57,7 @@ public class JSONataMapper {
         Object parts = input.get(PARTS_KEY);
         if (parts instanceof JList) {
             return ((JList<LinkedHashMap<String, Object>>) parts).stream()
-                    .map(LinkedHashMap.class::cast)
+                    //.map(LinkedHashMap.class::cast)
                     .collect(Collectors.toList());
         } else if (parts instanceof LinkedHashMap) {
             return List.of((LinkedHashMap<String, Object>) parts);
