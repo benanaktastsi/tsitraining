@@ -5,10 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJpaRepositories
 @SpringBootApplication
 @Slf4j
+@EnableScheduling
 public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
@@ -17,8 +19,7 @@ public class DemoApplication {
     // Checking that Kafka message can be received
     // In reality, will be received by a different service
     @KafkaListener(topics = "Message")
-    public void handleMessage(String message) {
-        log.info("Received topic from Order - {}", message);
+    public void handleMessage(String message) {log.info("Received topic from Order - {}", message);
     }
 
 }
