@@ -21,5 +21,4 @@ public class DemoApplication {
     @KafkaListener(topics = "Message")
     public void handleMessage(String message) {log.info("Received topic from Order - {}", message);
     }
-
 }
