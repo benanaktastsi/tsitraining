@@ -3,6 +3,7 @@ package com.tsi.training.service;
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.entity.Part;
+import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.util.ProcessResponse;
@@ -36,7 +37,7 @@ public class PartService implements IPartService {
     @Override
     public PartDTO getPartById(Long id) {
         Part part = partRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
+                .orElseThrow(() -> new NoPartExistsException("Part not found with id " + id));
         return partMapper.toDto(part);
     }
 
@@ -50,7 +51,7 @@ public class PartService implements IPartService {
     @Override
     public PartDTO updatePart(Long id, PartDTO request) {
         Part existingPart = partRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
+                .orElseThrow(() -> new NoPartExistsException("Part not found with id " + id));
         partMapper.toEntity(request, existingPart);
         Part updatedPart = partRepository.save(existingPart);
         return partMapper.toDto(updatedPart);
@@ -59,7 +60,7 @@ public class PartService implements IPartService {
     @Override
     public void deletePart(Long id) {
         if (!partRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found");
+            throw new NoPartExistsException("Part not found with id " + id);
         }
         partRepository.deleteById(id);
     }
@@ -67,7 +68,7 @@ public class PartService implements IPartService {
     @Override
     public PartDTO getPartByDescription(String description) {
         Part part = partRepository.findByDescription(description)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
+                .orElseThrow(() -> new NoPartExistsException("Part not found with this description: " + description));
         return partMapper.toDto(part);
     }
 
