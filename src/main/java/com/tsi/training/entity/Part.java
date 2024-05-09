@@ -18,5 +18,4 @@ public class Part extends BaseEntity {
     private Long id;
     private String description;
     private Double price;
-
 }

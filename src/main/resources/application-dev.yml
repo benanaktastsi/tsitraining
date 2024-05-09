@@ -13,13 +13,15 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     template:
-      default-topic: Message
+      topics: topics.example.message, topics.example.text-file-name
+
     consumer:
-      group-id: messageId
+      group-id: groupTest
       key-deserializer: org.apache.kafka.common.serialization.ShortDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
     producer:
-      group-id: messageId
+      group-id: groupTest
       key-serializer: org.apache.kafka.common.serialization.ShortSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
