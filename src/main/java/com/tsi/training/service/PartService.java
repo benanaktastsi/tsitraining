@@ -1,15 +1,19 @@
 package com.tsi.training.service;
 
 import com.tsi.training.dto.PartDTO;
+import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
+import com.tsi.training.util.ProcessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PartService implements IPartService {
@@ -65,5 +69,31 @@ public class PartService implements IPartService {
         Part part = partRepository.findByDescription(description)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Part not found"));
         return partMapper.toDto(part);
+    }
+
+    @Override
+    public void validateParts(ProcessResponse response) {
+        List<Part> parts = partRepository.findByDescriptionIn(response.getParts());
+
+        // Extract unique part descriptions
+        Set<String> descriptions = new HashSet<>();
+        for (Part part : parts) {
+            descriptions.add(part.getDescription());
+        }
+
+        removePartsIfNotExist(response, descriptions);
+    }
+
+    // Remove any parts from a list of orders that are not in the database
+    // TODO: Logging
+    private void removePartsIfNotExist(ProcessResponse response, Set<String> descriptions) {
+        for (OrderDTO order : response.getOrders()) {
+            order.getParts().removeIf(part -> !descriptions.contains(part.getPartDescription()));
+
+            // If an order no longer has any parts, remove the order
+            if (order.getParts().isEmpty()) {
+                response.getOrders().remove(order);
+            }
+        }
     }
 }
