@@ -1,6 +1,7 @@
 package com.tsi.training.service;
 
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,12 @@ public class OrderService {
 
     @Value("${spring.kafka.template.topics}")
     private final String[] topics;
+
+    @NonNull
     public final KafkaTemplate<String, String> kafkaTemplate;
 
 
-    public void sendKafkaTopic()
-    {
+    public void sendKafkaTopic() {
 
         log.info("Sending message from topic [{}]", this.topics[0]);
         kafkaTemplate.send(this.topics[0], "ProcessOrders");
