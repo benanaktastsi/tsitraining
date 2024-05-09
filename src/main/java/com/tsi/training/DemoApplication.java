@@ -8,10 +8,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 
 @EnableJpaRepositories
 @SpringBootApplication
 @Slf4j
+@EnableScheduling
 public class DemoApplication {
 
 
