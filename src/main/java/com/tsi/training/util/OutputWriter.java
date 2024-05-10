@@ -10,9 +10,8 @@ public class OutputWriter {
     static void writeToFile(Map<String, String> DealerMap) throws IOException {
             DealerMap.forEach((dealer, JSONString) -> {
                         String filename = "src/main/resources/"+ dealer;
-                        BufferedWriter writer = null;
                         try {
-                            writer = new BufferedWriter(new FileWriter(filename));
+                            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
                             writer.write(JSONString);
                             writer.close();
                         } catch (IOException e) {
