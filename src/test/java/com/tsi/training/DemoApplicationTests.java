@@ -11,7 +11,11 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
 @RunWith(Cucumber.class)
-@CucumberOptions(glue = {"src/java/com/tsi/training/stepdefs"},plugin = "pretty", features = {"src/test/resources/features"})
+@CucumberOptions(
+        stepNotifications = true,
+        glue = {"src/java/com/tsi/training/stepdefs"},
+        plugin = "pretty",
+        features = {"src/test/resources/features"})
 @ContextConfiguration(classes = DemoApplication.class)
 @CucumberContextConfiguration
 @AutoConfigureMockMvc

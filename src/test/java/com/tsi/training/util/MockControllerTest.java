@@ -3,10 +3,6 @@ package com.tsi.training.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tsi.training.dto.PartDTO;
-import io.cucumber.junit.Cucumber;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -15,13 +11,16 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@RunWith(Cucumber.class)
-@AutoConfigureMockMvc
+
 public class MockControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+    private final MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public MockControllerTest(MockMvc mockMvc)
+    {
+        this.mockMvc = mockMvc;
+    }
 
     public void sendPostRequestSavePart(PartDTO partDTO) throws Exception
     {

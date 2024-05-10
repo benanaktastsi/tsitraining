@@ -27,16 +27,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(Cucumber.class)
-@AutoConfigureMockMvc
-@RequiredArgsConstructor
+@AutoConfigureMockMvc(printOnlyOnFailure = true)
 public class PartsCRUDTests {
-
-    private MockControllerTest mockControllerTest;
+    
+    private final MockControllerTest mockControllerTest;
 
     // private MvcResult mvcResult;
     private PartDTO inputPartDTO;
     private PartDTO updatedPartDTO;
     private PartDTO resultPartDTO;
+
+    public PartsCRUDTests(MockMvc mockMvc)
+    {
+        this.mockControllerTest = new MockControllerTest(mockMvc);
+    }
 
 
 
