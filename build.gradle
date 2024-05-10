@@ -33,7 +33,14 @@ dependencies {
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
     testImplementation 'junit:junit:4.13.1'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.cucumber:cucumber-java:+'
+    testImplementation 'io.cucumber:cucumber-junit:+'
+    testImplementation 'io.cucumber:cucumber-spring:+'
+    testImplementation 'org.junit.jupiter:junit-jupiter:+'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:+'
 }
 
 
