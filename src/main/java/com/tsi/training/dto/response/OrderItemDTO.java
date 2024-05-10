@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class OrderItemDTO {
-    private double price;
+    private Double price;
     private String proposedDate;
     private String partDescription;
 }

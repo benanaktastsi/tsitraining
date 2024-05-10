@@ -3,7 +3,7 @@ package com.tsi.training.consumer;
 import com.tsi.training.exception.MissingFileException;
 import com.tsi.training.service.PartService;
 import com.tsi.training.util.JSONataMapper;
-import com.tsi.training.util.OutputMapper;
+import com.tsi.training.util.OrderMapper;
 import com.tsi.training.util.OutputWriter;
 import com.tsi.training.util.ProcessResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class ProcessOrderConsumer {
 
             ProcessResponse formattedInput = JSONataMapper.processJSON(filePath);
             partService.validateParts(formattedInput);
-            OutputWriter.writeToFile(OutputMapper.splitIntoStrings(formattedInput));
+            OutputWriter.writeToFile(OrderMapper.splitIntoStrings(formattedInput));
         } catch (IOException exception){
             log.error(exception.getMessage());
         }

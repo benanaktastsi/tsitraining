@@ -19,7 +19,6 @@ public class PartService  {
     private final PartRepository partRepository;
     private final PartMapper partMapper;
 
-
     public List<PartDTO> getAllParts() {
         List<Part> parts = partRepository.findAll();
         return partMapper.toDto(parts);

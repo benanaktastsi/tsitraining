@@ -1,4 +1,4 @@
-package com.tsi.training.util;
+package com.tsi.training.scheduler;
 
 import com.tsi.training.service.OrderService;
 import lombok.AllArgsConstructor;

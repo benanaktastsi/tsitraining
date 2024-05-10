@@ -20,6 +20,4 @@ public class OrderConsumerController {
     {
         orderService.sendOrderProcessMessage(startMessageRequest.getMessageText());
     }
-
-
 }
