@@ -13,7 +13,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     template:
-      topics: topics.example.message, topics.example.text-file-name
+      topics: topics.start.process, topics.example.text-file-name
 
     consumer:
       group-id: groupTest
@@ -26,3 +26,8 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 
+json:
+  folder:
+    input: ./src/main/resources/input
+    output: ./src/main/resources/output
+    sampleFileName: input

@@ -10,13 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErrorResponse {
 
-    private int statusCode;
+    private Integer statusCode;
     private String message;
 
-    public ErrorResponse(int code, String message)
-    {
-        super();
-        this.statusCode = code;
-        this.message = message;
-    }
 }
