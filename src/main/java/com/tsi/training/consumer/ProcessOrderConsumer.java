@@ -6,9 +6,7 @@ import com.tsi.training.service.PartService;
 import com.tsi.training.util.JSONataMapper;
 import com.tsi.training.util.OutputMapper;
 import com.tsi.training.util.ProcessResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +15,12 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @Component
 public class ProcessOrderConsumer {
 
     private final PartService partService;
-    private static final Logger log = LoggerFactory.getLogger(ProcessOrderConsumer.class);
 
-    @Autowired
     public ProcessOrderConsumer(PartService partService) {
         this.partService = partService;
     }
