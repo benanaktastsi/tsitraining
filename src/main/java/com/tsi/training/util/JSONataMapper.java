@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.dashjoin.jsonata.Jsonata.jsonata;
+import static com.tsi.training.util.Util.getDoubleOrNull;
+import static com.tsi.training.util.Util.getStringOrNull;
 
 /**
  * Logic for mapping an input json file to a list of orderDTOs and a list of part descriptions
@@ -51,13 +53,6 @@ public class JSONataMapper {
         return output;
     }
 
-    private static String getStringOrNull(LinkedHashMap<String, Object> map, String key) {
-        return map.containsKey(key) ? (String) map.get(key) : null;
-    }
-
-    private static Double getDoubleOrNull(LinkedHashMap<String, Object> map, String key) {
-        return map.containsKey(key) ? (Double) map.get(key) : null;
-    }
 
     @SuppressWarnings("unchecked")
     private static Stream<LinkedHashMap<String, Object>> getPartsStream(LinkedHashMap<String, Object> input) {
@@ -76,7 +71,6 @@ public class JSONataMapper {
      * ProcessResponse format
      * @param dataFilePath The path to the file to be read as the input
      * @return A POJO containing a list of orders and a list of part desciptions
-     * @throws IOException
      */
     public static ProcessResponse processJSON(Path dataFilePath) throws IOException {
         //read the json from file and convert with gson
