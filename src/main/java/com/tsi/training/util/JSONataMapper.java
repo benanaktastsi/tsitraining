@@ -26,7 +26,7 @@ import static com.tsi.training.util.Util.getStringOrNull;
 public class JSONataMapper {
 
     private static final Gson gson = new Gson();
-    private static final Path expressionPath = Path.of("./src/main/resources/JSONataExpression.txt");
+    private static final Path expressionPath = Path.of("./src/main/resources/expressions/JSONataExpression.txt");
     private static final String PARTS_KEY = "Parts";
 
     private static OrderDTO fromLinkedHashMap(LinkedHashMap<String, Object> input){
