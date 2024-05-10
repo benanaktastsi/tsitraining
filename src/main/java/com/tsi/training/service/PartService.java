@@ -10,9 +10,7 @@ import com.tsi.training.util.ProcessResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -61,20 +59,9 @@ public class PartService  {
     }
 
     public void validateParts(ProcessResponse response) {
-        List<Part> parts = partRepository.findByDescriptionIn(response.getParts());
+        List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
 
-        // Extract unique part descriptions
-        Set<String> descriptions = new HashSet<>();
-        for (Part part : parts) {
-            descriptions.add(part.getDescription());
-        }
-
-        removePartsIfNotExist(response, descriptions);
-    }
-
-    // Remove any parts from a list of orders that are not in the database
-    // TODO: Logging
-    private void removePartsIfNotExist(ProcessResponse response, Set<String> descriptions) {
+        // Remove parts from order if not existing in database
         for (OrderDTO order : response.getOrders()) {
             order.getParts().removeIf(part -> !descriptions.contains(part.getPartDescription()));
 
