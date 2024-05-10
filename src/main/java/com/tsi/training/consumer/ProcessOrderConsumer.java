@@ -5,6 +5,7 @@ import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.service.PartService;
 import com.tsi.training.util.JSONataMapper;
 import com.tsi.training.util.OutputMapper;
+import com.tsi.training.util.OutputWriter;
 import com.tsi.training.util.ProcessResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -31,9 +32,7 @@ public class ProcessOrderConsumer {
         try {
             ProcessResponse formattedInput = JSONataMapper.processJSON(filePath);
             partService.validateParts(formattedInput);
-            System.out.println(OutputMapper.splitIntoStrings(formattedInput));
-
-
+            OutputWriter.writeToFile(OutputMapper.splitIntoStrings(formattedInput));
         } catch (IOException exception){
             log.error(exception.getMessage());
         }

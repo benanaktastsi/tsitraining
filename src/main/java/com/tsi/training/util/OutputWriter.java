@@ -7,16 +7,15 @@ import java.util.Map;
 
 public class OutputWriter {
 
-    static void writeToFile(Map<String, String> DealerMap) throws IOException {
-            DealerMap.forEach((dealer, JSONString) -> {
-                        String filename = "src/main/resources/"+ dealer;
-                        try {
-                            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-                            writer.write(JSONString);
-                            writer.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+    public static void writeToFile(Map<String, String> DealerMap) throws IOException {
+        DealerMap.forEach((dealer, JSONString) -> {
+            String filename = "./src/main/resources/"+ dealer;
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+                writer.write(JSONString);writer.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
