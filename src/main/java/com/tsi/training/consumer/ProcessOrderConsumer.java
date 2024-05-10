@@ -29,11 +29,11 @@ public class ProcessOrderConsumer {
     }
 
     @KafkaListener(topics="topics.example.text-file-name")
-    public static void receiveKafkaMessage(String message){
+    public void receiveKafkaMessage(String message){
         Path filePath = Path.of("./src/main/resources/" + message);
         try {
             ProcessResponse formattedInput = JSONataMapper.processJSON(filePath);
-            //partService.validateParts(formattedInput);
+            partService.validateParts(formattedInput);
             System.out.println(OutputMapper.splitIntoStrings(formattedInput));
 
 
