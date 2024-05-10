@@ -5,14 +5,13 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class NoPartExistsException
-        extends RuntimeException {
+public class MissingFileException extends RuntimeException {
 
     private String message;
 
-    public NoPartExistsException() {}
+    public MissingFileException() {}
 
-    public NoPartExistsException(String msg)
+    public MissingFileException(String msg)
     {
         super(msg);
         this.message = msg;

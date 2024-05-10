@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class Scheduler {
+public class OrderScheduler {
 
     private OrderService orderService;
 
     @Scheduled(fixedRate = 10 * 1000)
-    public void ScheduleTest() {
-        orderService.sendKafkaTopic();
+    public void scheduleSendOrderMessage() {
+        orderService.sendOrderProcessMessage("Process Orders");
     }
 
 }
