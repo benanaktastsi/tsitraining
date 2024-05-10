@@ -1,7 +1,10 @@
 package com.tsi.training.consumer;
 
+import com.google.gson.Gson;
+import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.service.PartService;
 import com.tsi.training.util.JSONataMapper;
+import com.tsi.training.util.OutputMapper;
 import com.tsi.training.util.ProcessResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class ProcessOrderConsumer {
@@ -24,12 +29,14 @@ public class ProcessOrderConsumer {
     }
 
     @KafkaListener(topics="topics.example.text-file-name")
-    public void receiveKafkaMessage(String message){
+    public static void receiveKafkaMessage(String message){
         Path filePath = Path.of("./src/main/resources/" + message);
         try {
             ProcessResponse formattedInput = JSONataMapper.processJSON(filePath);
-            partService.validateParts(formattedInput);
-            // TODO: Continue flow with validated parts
+            //partService.validateParts(formattedInput);
+            System.out.println(OutputMapper.splitIntoStrings(formattedInput));
+
+
         } catch (IOException exception){
             log.error(exception.getMessage());
         }
