@@ -2,12 +2,14 @@ package com.tsi.training.service;
 
 import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.dto.response.OrderItemDTO;
+import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.util.ProcessResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,13 +18,15 @@ import static org.mockito.Mockito.when;
 
 public class PartServiceTests {
     private PartRepository partRepositoryMock;
+    private PartMapper partMapperMock;
     private PartService partService;
     private ProcessResponse processResponse;
 
     @Before
     public void setup() {
         partRepositoryMock = mock(PartRepository.class);
-        partService = mock(PartService.class);
+        partMapperMock = mock(PartMapper.class);
+        partService = new PartService(partRepositoryMock, partMapperMock);
 
         // Create mock process response
         OrderItemDTO item1 = new OrderItemDTO(0.99, "", "Door");
@@ -32,27 +36,27 @@ public class PartServiceTests {
         OrderDTO order1 = new OrderDTO("Volkswagen",
                 "123", "",
                 "Leo", "07892781112",
-                "L19EN", Arrays.asList(item1, item2));
+                "L19EN", new ArrayList<>(Arrays.asList(item1, item2)));
 
         OrderDTO order2 = new OrderDTO("Hyundai",
                 "124", "",
                 "Matthew", "07892781192",
-                "B377YN", Arrays.asList(item1, item3));
+                "B377YN", new ArrayList<>(Arrays.asList(item1, item3)));
 
         OrderDTO order3 = new OrderDTO("Ford",
                 "127", "",
                 "Lisa", "07892786123",
-                "S437KD", List.of(item3));
+                "S437KD", new ArrayList<>(List.of(item3)));
 
-        processResponse = new ProcessResponse(Arrays.asList(order1, order2, order3)
-                , Arrays.asList(item1.getPartDescription(), item2.getPartDescription(),
-                item3.getPartDescription()));
+        processResponse = new ProcessResponse(new ArrayList<>(Arrays.asList(order1, order2, order3))
+                , new ArrayList<>(Arrays.asList(item1.getPartDescription(), item2.getPartDescription(),
+                item3.getPartDescription())));
     }
 
     @Test
     public void whenPartIsMissingFromDatabase_ThenPartShouldBeRemovedFromOrders_AndEmptyOrdersShouldBeDeleted() {
         // Arrange
-        List<String> descriptions = Arrays.asList("Door", "Engine");
+        List<String> descriptions = new ArrayList<>(Arrays.asList("Door", "Engine"));
         when(partRepositoryMock.findByDescriptionIn(processResponse.getParts()))
                 .thenReturn(descriptions);
 

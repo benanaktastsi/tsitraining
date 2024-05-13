@@ -2,6 +2,7 @@ package com.tsi.training.service;
 
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.dto.response.OrderDTO;
+import com.tsi.training.dto.response.OrderItemDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
@@ -11,9 +12,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class PartService  {
 
     private final PartRepository partRepository;
@@ -62,12 +64,10 @@ public class PartService  {
 
         // Remove parts from order if not existing in database
         for (OrderDTO order : response.getOrders()) {
-            order.getParts().removeIf(part -> !descriptions.contains(part.getPartDescription()));
-
-            // If an order no longer has any parts, remove the order
-            if (order.getParts().isEmpty()) {
-                response.getOrders().remove(order);
-            }
+            order.getParts().removeIf((part -> !descriptions.contains(part.getPartDescription())));
         }
+
+        // If an order no longer has any parts, remove the order
+        response.getOrders().removeIf(order -> order.getParts().isEmpty());
     }
 }
