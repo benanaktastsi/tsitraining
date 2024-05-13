@@ -28,6 +28,6 @@ spring:
 
 json:
   folder:
-    input: ./src/main/resources/input
-    output: ./src/main/resources/output
-    sampleFileName: input
+    input: ./src/main/resources/input/
+    output: ./src/main/resources/output/
+    sampleFileName: input.json
