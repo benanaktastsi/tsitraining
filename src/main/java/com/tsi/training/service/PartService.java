@@ -9,11 +9,13 @@ import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.util.ProcessResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class PartService  {
@@ -63,9 +65,13 @@ public class PartService  {
         List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
 
         // Remove parts from order if not existing in database
-        for (OrderDTO order : response.getOrders()) {
-            order.getParts().removeIf((part -> !descriptions.contains(part.getPartDescription())));
-        }
+        response.getParts().forEach(order -> {
+            List<String> removedParts = response.getParts().stream()
+                    .filter(part -> !descriptions.contains(part))
+                    .peek(part -> log.warn("Removing part: {}", part))
+                    .collect(Collectors.toList());
+            response.getParts().removeAll(removedParts);
+        });
 
         // If an order no longer has any parts, remove the order
         response.getOrders().removeIf(order -> order.getParts().isEmpty());
