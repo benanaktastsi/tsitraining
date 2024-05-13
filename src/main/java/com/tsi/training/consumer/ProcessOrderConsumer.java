@@ -24,8 +24,8 @@ public class ProcessOrderConsumer {
 
     private final PartService partService;
 
-    @Value("${json.folder.input}")
-    private String inputPath;
+    @Value("${json.folder.input}") private String inputFolderPath;
+    @Value("${json.folder.output}") private String outputFolderPath;
 
     public ProcessOrderConsumer(PartService partService) {
         this.partService = partService;
@@ -38,7 +38,7 @@ public class ProcessOrderConsumer {
 
             ProcessResponse formattedInput = JSONataMapper.processJSON(filePath);
             partService.validateParts(formattedInput);
-            OutputWriter.writeToFile(OrderMapper.splitIntoStrings(formattedInput));
+                OutputWriter.writeToFile(OrderMapper.splitIntoStrings(formattedInput), this.outputFolderPath);
         } catch (IOException exception){
             log.error(exception.getMessage());
         }
@@ -48,7 +48,7 @@ public class ProcessOrderConsumer {
     {
         if(StringUtils.isEmpty(inputFileName)) throw new MissingFileException("Input file name empty.");
 
-        String inputFile = inputPath + inputFileName;
+        String inputFile = this.inputFolderPath + inputFileName;
         log.info("Opening file {}", inputFile);
         return Path.of(inputFile);
     }
