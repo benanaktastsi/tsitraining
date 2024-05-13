@@ -38,7 +38,7 @@ public class ProcessOrderConsumer {
 
             ProcessResponse formattedInput = JSONataMapper.processJSON(filePath);
             partService.validateParts(formattedInput);
-            OutputWriter.writeToFile(OrderMapper.splitIntoStrings(formattedInput), this.outputFolderPath);
+                OutputWriter.writeToFile(OrderMapper.splitIntoStrings(formattedInput), this.outputFolderPath);
         } catch (IOException exception){
             log.error(exception.getMessage());
         }
