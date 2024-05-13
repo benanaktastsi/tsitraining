@@ -74,4 +74,27 @@ public class PartServiceTests {
             }
         }
     }
+
+    @Test
+    public void whenAllPartsArePresentInDatabase_ProcessResponseShouldBeUnaltered() {
+        // Arrange
+        List<String> descriptions = new ArrayList<>(Arrays.asList("Door", "Engine", "Wheel"));
+        when(partRepositoryMock.findByDescriptionIn(processResponse.getParts()))
+                .thenReturn(descriptions);
+
+        // Act
+        partService.validateParts(processResponse);
+
+        // Assert
+        Assert.assertEquals(3, processResponse.getOrders().size());
+        Assert.assertEquals(2, processResponse.getOrders().get(0).getParts().size());
+        Assert.assertEquals(2, processResponse.getOrders().get(1).getParts().size());
+        Assert.assertEquals(1, processResponse.getOrders().get(2).getParts().size());
+
+        for (OrderDTO order : processResponse.getOrders()) {
+            for (OrderItemDTO part : order.getParts()) {
+                Assert.assertTrue(descriptions.contains(part.getPartDescription()));
+            }
+        }
+    }
 }
