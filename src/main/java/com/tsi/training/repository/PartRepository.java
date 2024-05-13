@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface PartRepository extends JpaRepository<Part, Long> {
     Optional<Part> findByDescription(String description);
 
-    @Query("select u.description from Part u where u.description in ?d")
+    @Query("select u.description from Part u where u.description in ?1")
     List<String> findByDescriptionIn(List<String> descriptions);
 }

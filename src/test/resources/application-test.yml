@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # password: 1234
+    # url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/tsi
+    url: jdbc:mysql://localhost:3306/tsi
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    template:
+      topics: topics.start.process, topics.example.text-file-name
+
+    consumer:
+      group-id: groupTest
+      key-deserializer: org.apache.kafka.common.serialization.ShortDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+    producer:
+      group-id: groupTest
+      key-serializer: org.apache.kafka.common.serialization.ShortSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+json:
+  folder:
+    input: ./src/main/resources/input
+    output: ./src/main/resources/output
+    sampleFileName: input
