@@ -13,7 +13,6 @@ public class OutputWriter {
     public static void writeToFile(Map<String, String> DealerMap, String outputFolderPath) throws IOException {
         DealerMap.forEach((dealer, JSONString) -> {
             String filename = outputFolderPath + dealer;
-            System.out.println(filename);
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
                 writer.write(JSONString);writer.close();
