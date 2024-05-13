@@ -29,13 +29,20 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
     implementation group: 'com.ibm.jsonata4java', name: 'JSONata4Java', version: '2.4.9'
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-5', version: '2.21.1'
-
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
-    testImplementation 'junit:junit:4.13.1'
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
+    implementation 'javax.validation:validation-api:2.0.1.Final'
 
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.cucumber:cucumber-java:+'
+    testImplementation 'io.cucumber:cucumber-junit:+'
+    testImplementation 'io.cucumber:cucumber-spring:+'
+    testImplementation 'org.junit.jupiter:junit-jupiter:+'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:+'
+}
 
 compileJava {
     options.compilerArgs = [

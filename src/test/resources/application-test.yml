@@ -5,7 +5,7 @@ spring:
     # url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/tsi
     url: jdbc:mysql://localhost:3306/tsi
     username: root
-    password: root
+    password: 1234
   jpa:
     hibernate:
       ddl-auto: create
