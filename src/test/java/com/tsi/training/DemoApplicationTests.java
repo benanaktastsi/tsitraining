@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-@RunWith(Cucumber.class)
+//@RunWith(Cucumber.class)
 @CucumberOptions(
         stepNotifications = true,
         glue = {"src/java/com/tsi/training/stepdefs"},

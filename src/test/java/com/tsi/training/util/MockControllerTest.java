@@ -22,16 +22,18 @@ public class MockControllerTest {
         this.mockMvc = mockMvc;
     }
 
-    public void sendPostRequestSavePart(PartDTO partDTO) throws Exception
+    public PartDTO sendPostRequestSavePart(PartDTO partDTO) throws Exception
     {
-        this.mockMvc
+        return this.objectMapper.readValue(this.mockMvc
                 .perform(post("/api/parts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper
                                 .writeValueAsString(partDTO)))
-        // .andDo(print())
-        // .andReturn()
-        ;
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+
+                PartDTO.class);
 
 
     }
@@ -41,7 +43,6 @@ public class MockControllerTest {
     {
         return this.objectMapper.readValue(this.mockMvc
                 .perform(get("/api/parts/description/{description}", partDTO.getDescription()))
-                .andDo(print())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
@@ -61,15 +62,18 @@ public class MockControllerTest {
     }
 
 
-    public void sendPatchRequestUpdatePart(PartDTO originalDTO, PartDTO updatedDTO) throws Exception
+    public PartDTO sendPatchRequestUpdatePart(PartDTO originalDTO, PartDTO updatedDTO) throws Exception
     {
-        this.mockMvc
+        return this.objectMapper.readValue(this.mockMvc
                 .perform(patch("/api/parts/{id}", originalDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper()
                                 .writeValueAsString(updatedDTO)))
-                .andDo(print());
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
 
+                PartDTO.class);
     }
 
 

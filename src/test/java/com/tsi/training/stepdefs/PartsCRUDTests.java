@@ -1,9 +1,5 @@
 package com.tsi.training.stepdefs;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.util.MockControllerTest;
 import io.cucumber.java.DataTableType;
@@ -11,25 +7,19 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.junit.Cucumber;
-import lombok.RequiredArgsConstructor;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(Cucumber.class)
 @AutoConfigureMockMvc(printOnlyOnFailure = true)
 public class PartsCRUDTests {
-    
+
     private final MockControllerTest mockControllerTest;
 
     // private MvcResult mvcResult;
