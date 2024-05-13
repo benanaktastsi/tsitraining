@@ -2,88 +2,111 @@ package com.tsi.training.controller;
 
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.service.PartService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PartControllerTest {
 
-    PartService partServiceMock;
-    List<PartDTO> partsMock;
+    private PartService partServiceMock;
+    private PartController partController;
+    private PartDTO part;
+
+    @Before
+    public void setup() {
+        partServiceMock = mock(PartService.class);
+        partController = new PartController(partServiceMock);
+
+        part = new PartDTO(1L, "Engine", 99.99);
+    }
 
     @Test
     public void getAllPartsTest() {
-        partServiceMock = mock(PartService.class); //instantiates mock
-        partsMock = (List<PartDTO>) mock(List.class);
+        // Arrange
+        PartDTO part2 = new PartDTO(1L, "Wheel", 10.99);
+        List<PartDTO> parts = new ArrayList<>(Arrays.asList(part, part2));
 
-        when(partServiceMock.getAllParts()).thenReturn(partsMock);
+        when(partServiceMock.getAllParts()).thenReturn(parts);
 
-        PartController p = new PartController(partServiceMock);
+        // Act
+        ResponseEntity<List<PartDTO>> response = partController.getAllParts();
 
-        ResponseEntity<List<PartDTO>> check = p.getAllParts();
-        assertEquals(check, ResponseEntity.ok(partsMock));
-
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void getPartByIdTest() {
-        partServiceMock = mock(PartService.class); //instantiates mock
-        partsMock = (List<PartDTO>) mock(List.class);
+        // Arrange
+        when(partServiceMock.getPartById(1L)).thenReturn(part);
 
-        when(partServiceMock.getPartById(1L)).thenReturn(new PartDTO());
+        // Act
+        ResponseEntity<PartDTO> response = partController.getPartById(1L);
 
-        PartController p = new PartController(partServiceMock);
-
-        PartDTO check = p.getPartById(1L).getBody();
-        assertEquals(check, new PartDTO());
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(part, response.getBody());
     }
 
     @Test
     public void createNewPartTest() {
-        partServiceMock = mock(PartService.class); //instantiates mock
-        partsMock = (List<PartDTO>) mock(List.class);
+        // Arrange
+        PartDTO input = new PartDTO(null, "Engine", 99.99);
+        when(partServiceMock.createPart(input)).thenReturn(part);
 
-        when(partServiceMock.createPart(new PartDTO())).thenReturn(new PartDTO());
+        // Act
+        var response = partController.createNewPart(input);
 
-        PartController p = new PartController(partServiceMock);
-
-        PartDTO check = p.createNewPart(new PartDTO()).getBody();
-        assertEquals(check, new PartDTO());
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(part, response.getBody());
     }
 
     @Test
     public void updatePartTest() {
-        partServiceMock = mock(PartService.class); //instantiates mock
-        partsMock = (List<PartDTO>) mock(List.class);
+        // Arrange
+        PartDTO input = new PartDTO(null, "Engine", 99.99);
+        when(partServiceMock.updatePart(1L, input)).thenReturn(part);
 
-        when(partServiceMock.updatePart(1L,new PartDTO())).thenReturn(new PartDTO());
+        // Act
+        ResponseEntity<PartDTO> response = partController.updatePart(1L, input);
 
-        PartController p = new PartController(partServiceMock);
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(part, response.getBody());
+    }
 
-        PartDTO check = p.updatePart(1L, new PartDTO()).getBody();
-        assertEquals(check, new PartDTO());
+    @Test
+    public void deletePartTest() {
+        // Act
+        var response = partController.deletePart(1L);
+
+        // Assert
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
     public void getPartByDescriptionTest() {
-        partServiceMock = mock(PartService.class); //instantiates mock
-        partsMock = (List<PartDTO>) mock(List.class);
+        // Arrange
+        when(partServiceMock.getPartByDescription("Engine")).thenReturn(part);
 
-        when(partServiceMock.getPartByDescription("tyre")).thenReturn(new PartDTO());
+        // Act
+        ResponseEntity<PartDTO> response = partController.getPartByDescription("Engine");
 
-        PartController p = new PartController(partServiceMock);
-
-        PartDTO check = p.getPartByDescription("tyre").getBody();
-        assertEquals(check, new PartDTO());
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(part, response.getBody());
     }
 }
