@@ -1,6 +1,8 @@
 package com.tsi.training.stepdefs;
 
 import com.tsi.training.dto.PartDTO;
+import com.tsi.training.dto.PartDTOInputOutputTest;
+import com.tsi.training.entity.Part;
 import com.tsi.training.util.MockControllerTest;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
@@ -12,8 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RunWith(Cucumber.class)
@@ -23,9 +25,9 @@ public class PartsCRUDTests {
     private final MockControllerTest mockControllerTest;
 
     // private MvcResult mvcResult;
-    private PartDTO inputPartDTO;
-    private PartDTO updatedPartDTO;
-    private PartDTO resultPartDTO;
+    private List<PartDTO> inputPartDTOList;
+    private List<PartDTO> updatedPartDTOList;
+    private List<PartDTO> resultPartDTOList;
 
     public PartsCRUDTests(MockMvc mockMvc)
     {
@@ -35,44 +37,90 @@ public class PartsCRUDTests {
 
 
     @DataTableType
-    public PartDTO convert(Map<String, String> entry)
+    public PartDTOInputOutputTest convert(Map<String, String> entry)
     {
-        PartDTO partDTO = new PartDTO();
-        partDTO.setId(Long.valueOf(entry.get("id")));
-        partDTO.setDescription(entry.get("description"));
-        partDTO.setPrice(Double.valueOf(entry.get("price")));
+        return new PartDTOInputOutputTest(
+                getPartDTOList("input", entry),
+                getPartDTOList("output", entry));
+        
+    }
 
-        return partDTO;
+    private List<PartDTO> getPartDTOList(String inputOutput, Map<String, String> entry)
+    {
+
+        String[] idArray = !Objects.isNull(entry.get("id_" + inputOutput))
+                ? entry.get("id_" + inputOutput).split(",")
+                : new String[0];
+
+        String[] descriptionArray = !Objects.isNull(entry.get("description_" + inputOutput))
+                ? entry.get("description_" + inputOutput).split(",")
+                : new String[0];
+
+        String[] priceArray = !Objects.isNull(entry.get("price_" + inputOutput))
+                ? entry.get("price_" + inputOutput).split(",")
+                : new String[0];
+
+
+        List<PartDTO> partDTOList = new LinkedList<>();
+        for(int i = 0; i < idArray.length; i++)
+        {
+            PartDTO newPartDTO = new PartDTO();
+            newPartDTO.setId(Long.valueOf(idArray[i]));
+            newPartDTO.setDescription(descriptionArray[i]);
+            newPartDTO.setPrice(Double.valueOf(priceArray[i]));
+
+            partDTOList.add(newPartDTO);
+        }
+
+        return partDTOList;
     }
 
     // ==================================================
     // ==================================================
 
 
-    @Given("a Part DTO with")
-    public void givenPartDTO(PartDTO partDTO)
+    @Given("an existing Part Repository with")
+    public void givenAnExistingPartRepository(PartDTOInputOutputTest partDTOInputOutputTest) throws Exception
     {
-        this.inputPartDTO = partDTO;
+        this.mockControllerTest.sendNukeRequest();
+
+        List<PartDTO> partDTOList = partDTOInputOutputTest.getInputPartDTOList();
+        for(PartDTO partDTO : partDTOList) this.mockControllerTest.sendPostRequestSavePart(partDTO);
+    }
+
+
+    @Given("a Part DTO with")
+    public void givenPartDTO(PartDTOInputOutputTest partDTOInputOutputTest)
+    {
+        this.inputPartDTOList = partDTOInputOutputTest.getInputPartDTOList();
     }
 
     @When("save Part to Part Repository")
     public void whenSavePartToPartRepository() throws Exception
     {
-        this.mockControllerTest.sendPostRequestSavePart(this.inputPartDTO);
+        for(PartDTO inputPartDTO : this.inputPartDTOList)
+        {
+            this.mockControllerTest.sendPostRequestSavePart(inputPartDTO);
+        }
     }
 
     @Then("expect Part Repository with")
-    public void thenExpectPartRepository(List<PartDTO> expectedPartDTOList) throws Exception
+    public void thenExpectPartRepository(PartDTOInputOutputTest expectedPartDTOInputOutputTest) throws Exception
     {
-        List<PartDTO> responsePartDTOList = this.mockControllerTest.sendGetRequestFindAllParts();
+        // Sort the lists by ID before asserting
+        List<PartDTO> responsePartDTOList = this.mockControllerTest.sendGetRequestFindAllParts()
+                .stream()
+                .sorted(Comparator.comparing(PartDTO :: getId).reversed())
+                .collect(Collectors.toList());
 
-        for(int i = 0; i < expectedPartDTOList.size(); i++)
-        {
-            PartDTO expectedDTO = expectedPartDTOList.get(i);
-            PartDTO responseDTO = responsePartDTOList.get(i);
+        List<PartDTO> expectedPartDTOList = expectedPartDTOInputOutputTest.getOutputPartDTOList()
+                .stream()
+                .sorted(Comparator.comparing(PartDTO :: getId).reversed())
+                .collect(Collectors.toList());;
 
-            Assert.assertEquals(expectedDTO, responseDTO);
-        }
+
+        Assert.assertEquals(expectedPartDTOList, responsePartDTOList);
+
     }
 
 
@@ -80,22 +128,20 @@ public class PartsCRUDTests {
 
 
 
-    @Given("an existing Part Repository with")
-    public void givenAnExistingPartRepository(List<PartDTO> partDTOList) throws Exception
-    {
-        for(PartDTO partDTO : partDTOList) this.mockControllerTest.sendPostRequestSavePart(partDTO);
-    }
-
     @When("find Part from Part Repository by description")
     public void whenFindPartFromPartRepositoryByDescription() throws Exception
     {
-        this.resultPartDTO = this.mockControllerTest.sendGetRequestFindPartByDescription(this.inputPartDTO);
+        this.resultPartDTOList = new LinkedList<>();
+        for(PartDTO inputPartDTO : this.inputPartDTOList) {
+            this.resultPartDTOList
+                    .add(this.mockControllerTest.sendGetRequestFindPartByDescription(inputPartDTO));
+        }
     }
 
     @Then("expect Part returned with")
     public void thenExpectPartReturned(PartDTO expectedPartDTO)
     {
-        Assert.assertEquals(expectedPartDTO, this.resultPartDTO);
+        for(PartDTO resultPartDTO : resultPartDTOList) Assert.assertEquals(expectedPartDTO, resultPartDTO);
     }
 
 
@@ -105,15 +151,20 @@ public class PartsCRUDTests {
 
 
     @Given("an updated Part DTO with")
-    public void givenUpdatedPartDTO(PartDTO updatedPartDTO)
+    public void givenUpdatedPartDTO(PartDTOInputOutputTest partDTOInputOutputTest)
     {
-        this.updatedPartDTO = updatedPartDTO;
+        this.updatedPartDTOList.addAll(partDTOInputOutputTest.getInputPartDTOList());
     }
 
     @When("update Part from updated Part DTO")
     public void whenUpdatePartFromUpdatedPartDTO() throws Exception
     {
-        this.mockControllerTest.sendPatchRequestUpdatePart(this.inputPartDTO, this.updatedPartDTO);
+        for(int i = 0; i < this.inputPartDTOList.size(); i++)
+        {
+            this.mockControllerTest.sendPatchRequestUpdatePart(
+                    this.inputPartDTOList.get(i),
+                    this.updatedPartDTOList.get(i));
+        }
     }
 
 
@@ -123,7 +174,7 @@ public class PartsCRUDTests {
     @When("delete Part from Part Repository")
     public void whenDeletePartFromPartRepository() throws Exception
     {
-        this.mockControllerTest.sendDeleteRequestDeletePart(this.inputPartDTO);
+        for(PartDTO inputPartDTO : this.inputPartDTOList) this.mockControllerTest.sendDeleteRequestDeletePart(inputPartDTO);
     }
 
 

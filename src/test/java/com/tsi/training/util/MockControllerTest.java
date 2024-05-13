@@ -22,18 +22,25 @@ public class MockControllerTest {
         this.mockMvc = mockMvc;
     }
 
-    public PartDTO sendPostRequestSavePart(PartDTO partDTO) throws Exception
+    public PartDTO sendPostRequestSavePart(PartDTO partDTO)
     {
-        return this.objectMapper.readValue(this.mockMvc
-                .perform(post("/api/parts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper
-                                .writeValueAsString(partDTO)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(),
+       try
+       {
+           return this.objectMapper.readValue(this.mockMvc
+                           .perform(post("/api/parts")
+                                   .contentType(MediaType.APPLICATION_JSON)
+                                   .content(this.objectMapper
+                                           .writeValueAsString(partDTO)))
+                           .andReturn()
+                           .getResponse()
+                           .getContentAsString(),
 
-                PartDTO.class);
+                   PartDTO.class);
+       }
+       catch(Exception e)
+       {
+           return null;
+       }
 
 
     }
@@ -81,5 +88,10 @@ public class MockControllerTest {
     {
         this.mockMvc
                 .perform(delete("/api/parts/{id}", partDTO.getId()));
+    }
+
+    public void sendNukeRequest() throws Exception
+    {
+        this.mockMvc.perform(delete("/api/parts/nuke"));
     }
 }

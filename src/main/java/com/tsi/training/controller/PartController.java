@@ -1,6 +1,7 @@
 package com.tsi.training.controller;
 
 import com.tsi.training.dto.PartDTO;
+import com.tsi.training.repository.PartRepository;
 import com.tsi.training.service.PartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,16 @@ public class PartController {
 
     private final PartService partService;
 
+    private final PartRepository partRepository;
+
     /**
      * Constructor injection for PartService.
      *
      * @param partService Part service
      */
-    public PartController(PartService partService) {
+    public PartController(PartService partService, PartRepository partRepository) {
         this.partService = partService;
+        this.partRepository = partRepository;
     }
 
     /**
@@ -122,5 +126,14 @@ public class PartController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    /**
+     * REMOVE LATER - USED TO RESET REPOSITORY DURING TESTING
+     */
+    @DeleteMapping("/nuke")
+    public void deleteAllEntries()
+    {
+        this.partRepository.deleteAll();
     }
 }
