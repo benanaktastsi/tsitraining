@@ -1,9 +1,8 @@
 package com.tsi.training.service;
 
 import com.tsi.training.dto.PartDTO;
-import com.tsi.training.dto.response.OrderDTO;
-import com.tsi.training.dto.response.OrderItemDTO;
 import com.tsi.training.entity.Part;
+import com.tsi.training.exception.NoOrderExistsException;
 import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
@@ -11,6 +10,7 @@ import com.tsi.training.util.ProcessResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,8 +64,15 @@ public class PartService  {
     public void validateParts(ProcessResponse response) {
         List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
 
+        if(CollectionUtils.isEmpty(descriptions)){
+                throw new NoPartExistsException("There is no parts used defined in database ");
+        }
+        if(CollectionUtils.isEmpty(response.getOrders())){
+            throw new NoOrderExistsException("There is no parts used defined in database ");
+        }
+
         // Remove parts from order if not existing in database
-        response.getParts().forEach(order -> {
+        response.getOrders().forEach(order -> {
             List<String> removedParts = response.getParts().stream()
                     .filter(part -> !descriptions.contains(part))
                     .peek(part -> log.warn("Removing part: {}", part))
