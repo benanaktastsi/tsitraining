@@ -1,0 +1,141 @@
+{
+  "orders": [
+    {
+      "reference": "75a45695-237d-4507-b0ec-11e977c4cff2",
+      "orderDate": "2024-04-23 10:00",
+      "partIds": [
+        {
+          "id": 1,
+          "propsedDeliveryDate": "2024-04-25 10:00"
+        },
+        {
+          "id": 3,
+          "propsedDeliveryDate": "2024-4-27 12:00"
+        },
+        {
+          "id": 4,
+          "propsedDeliveryDate": "2024-04-25 12:00"
+        }
+      ],
+      "customerId": 233,
+      "dealerId": 1
+    },
+    {
+      "reference": "369831e6-1ce5-4479-be9a-de0165a13532",
+      "orderDate": "2024-04-23 10:00",
+      "partIds": [
+        {
+          "id": 1,
+          "propsedDeliveryDate": "2024-04-25 10:00"
+        },
+        {
+          "id": 2,
+          "propsedDeliveryDate": "2024-4-27 12:00"
+        },
+        {
+          "id": 4,
+          "propsedDeliveryDate": "2024-04-25 12:00"
+        }
+      ],
+      "customerId": 334,
+      "dealerId": 2
+    },
+    {
+      "reference": "ad781d4a-8697-4f17-b213-c2229bb0b3ab",
+      "orderDate": "2024-04-23 10:00",
+      "partIds": [
+        {
+          "id": 5,
+          "propsedDeliveryDate": "2024-04-25 10:00"
+        }
+      ],
+      "customerId": 254,
+      "dealerId": 3
+    }
+  ],
+  "parts": [
+    {
+      "id": 1,
+      "description": "Tyre",
+      "price": 400.00
+    },
+    {
+      "id": 2,
+      "description": "Brakes",
+      "price": 200.00
+    },
+    {
+      "id": 3,
+      "description": "Steering",
+      "price": 300.00
+    },
+    {
+      "id": 4,
+      "description": "Clutch",
+      "price": 255.99
+    },
+    {
+      "id": 5,
+      "description": "Muffler",
+      "price": 599.99
+    }
+  ],
+  "customer": [
+    {
+      "id": 233,
+      "firstName": "Axel",
+      "surname": "Henrikson",
+      "addressLine1": "Inchcape",
+      "addressLine2": "Soliihull",
+      "postCode": "B377yn",
+      "contact": [
+        {
+          "home": "019876543333",
+          "mobile": "07876766565"
+        }
+      ]
+    },
+    {
+      "id": "334",
+      "firstName": "Shubham",
+      "surname": "Tandale",
+      "addressLine1": "Inchcape",
+      "addressLine2": "Soliihull office",
+      "postCode": "B377yn",
+      "contact": [
+        {
+          "home": "0198765434",
+          "mobile": "07876766567"
+        }
+      ]
+    },
+    {
+      "id": "254",
+      "firstName": "Kevin",
+      "surname": "Pham",
+      "addressLine1": "Inchcape",
+      "addressLine2": "Soliihull office",
+      "postCode": "B377yn",
+      "contact": [
+        {
+          "home": "01987644434",
+          "mobile": "0782342342"
+        }
+      ]
+    }
+  ],
+  "dealers": [
+    {
+      "id": 1,
+      "description": "Inchcape Toyota - Guildford"
+    },
+    {
+      "id": 2,
+      "description": "Inchcape Chelmsford BMW"
+    },
+    {
+      "id": 3,
+      "description": "Inchcape Toyota - Sandhurst"
+    }
+  ]
+}
