@@ -6,11 +6,11 @@ Feature: CRUD operations on Part Repository
 
   Scenario Outline: CREATE a Part
     Given an existing Part Repository with
-        | id_input   | description_input   | price_input   |
-        | <id_input> | <description_input> | <price_input> |
+      | id_input   | description_input   | price_input   |
+      | <id_input> | <description_input> | <price_input> |
       And a Part DTO with
-          | id_input | description_input | price_input |
-          | 1        | new item 1        | 100         |
+        | id_input | description_input | price_input |
+        | 1        | new item 1        | 100         |
     When save Part to Part Repository
     Then expect Part Repository with
       | id_output   | description_output   | price_output   |
@@ -28,11 +28,12 @@ Feature: CRUD operations on Part Repository
        # INVALID INPUTS - Existing ID (currently having issues with non-unique ID being replaced)
       # | 1        | item 1            | 200         | 1         | item 1             | 200          |
 
+
   Scenario Outline: READ from Part Repository
     Given an existing Part Repository with
       | id_input   | description_input   | price_input   |
       | <id_input> | <description_input> | <price_input> |
-    And a Part DTO with
+      And a Part DTO with
         | id_input | description_input | price_input |
         | 4        | new item 4        | 400         |
     When find Part from Part Repository by description
@@ -44,18 +45,22 @@ Feature: CRUD operations on Part Repository
       | id_input | description_input | price_input | id_output | description_output | price_output |
       # VALID INPUTS
       | 4        | new item 4        | 400         | 4         | new item 4         | 400          |
+      # INVALID INPUTS - Empty repo
+      |          |                   |             |           |                    |              |
+      # INVALID INPUTS - Missing Part description
+      | 1        | item 1            | 100         |           |                    |              |
 
 
   Scenario Outline: UPDATE a Part
     Given an existing Part Repository with
       | id_input   | description_input   | price_input   |
       | <id_input> | <description_input> | <price_input> |
-    And a Part DTO with
-      | id_input | description_input | price_input |
-      | 4        | new item 4        | 400         |
-    And an updated Part DTO with
-      | id_input | description_input | price_input |
-      | 4        | updated item 4    | 4000        |
+      And a Part DTO with
+        | id_input | description_input | price_input |
+        | 4        | new item 4        | 400         |
+      And an updated Part DTO with
+        | id_input | description_input | price_input |
+        | 4        | updated item 4    | 4000        |
     When update Part from updated Part DTO
     Then expect Part Repository with
       | id_output   | description_output   | price_output   |
@@ -63,8 +68,12 @@ Feature: CRUD operations on Part Repository
 
     Examples:
       | id_input | description_input | price_input | id_output | description_output | price_output |
-    # VALID INPUTS
+      # VALID INPUTS
       | 4        | new item 4        | 400         | 4         | updated item 4     | 4000         |
+       # INVALID INPUTS - Empty repo
+      |          |                   |             |           |                    |              |
+      # INVALID INPUTS - Missing Part
+      | 1        | item 1            | 100         | 1         | item 1             | 100          |
 
 
   Scenario Outline: DELETE a Part
@@ -81,5 +90,9 @@ Feature: CRUD operations on Part Repository
 
     Examples:
       | id_input | description_input | price_input | id_output | description_output | price_output |
-    # VALID INPUTS
+      # VALID INPUTS
       | 4        | new item 4        | 400         |           |                    |              |
+      # INVALID INPUTS - Empty repo
+      |          |                   |             |           |                    |              |
+      # INVALID INPUTS - Missing Part
+      | 1        | item 1            | 100         | 1         | item 1             | 100          |

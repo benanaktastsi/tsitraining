@@ -1,6 +1,7 @@
-package com.tsi.training.dto;
+package com.tsi.training.cucumber.dto;
 
 
+import com.tsi.training.dto.PartDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -9,10 +10,11 @@ import lombok.Setter;
 import java.util.List;
 
 
+@Getter
 public class PartDTOInputOutputTest {
 
-    private List<PartDTO> inputPartDTOList;
-    private List<PartDTO> outputPartDTOList;
+    private final List<PartDTO> inputPartDTOList;
+    private final List<PartDTO> outputPartDTOList;
 
     public PartDTOInputOutputTest(List<PartDTO> inputPartDTOList, List<PartDTO> outputPartDTOList)
     {
@@ -20,13 +22,4 @@ public class PartDTOInputOutputTest {
         this.outputPartDTOList = outputPartDTOList;
     }
 
-    public List<PartDTO> getInputPartDTOList()
-    {
-        return this.inputPartDTOList;
-    }
-
-    public List<PartDTO> getOutputPartDTOList()
-    {
-        return this.outputPartDTOList;
-    }
 }

@@ -3,6 +3,7 @@ package com.tsi.training.cucumber;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tsi.training.dto.PartDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-
+@Slf4j
 public class MockControllerTest {
 
     private final MockMvc mockMvc;
@@ -39,6 +40,7 @@ public class MockControllerTest {
        }
        catch(Exception e)
        {
+           log.warn("Failed to complete POST request to save Part");
            return null;
        }
 
@@ -48,13 +50,21 @@ public class MockControllerTest {
 
     public PartDTO sendGetRequestFindPartByDescription(PartDTO partDTO) throws Exception
     {
-        return this.objectMapper.readValue(this.mockMvc
-                .perform(get("/api/parts/description/{description}", partDTO.getDescription()))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(),
+        try
+        {
+            return this.objectMapper.readValue(this.mockMvc
+                            .perform(get("/api/parts/description/{description}", partDTO.getDescription()))
+                            .andReturn()
+                            .getResponse()
+                            .getContentAsString(),
 
-                PartDTO.class);
+                    PartDTO.class);
+        }
+        catch(Exception e)
+        {
+            log.warn("Failed to complete GET request to find Part by description.");
+            return null;
+        }
     }
 
     public List<PartDTO> sendGetRequestFindAllParts() throws Exception
@@ -71,16 +81,23 @@ public class MockControllerTest {
 
     public PartDTO sendPatchRequestUpdatePart(PartDTO originalDTO, PartDTO updatedDTO) throws Exception
     {
-        return this.objectMapper.readValue(this.mockMvc
-                .perform(patch("/api/parts/{id}", originalDTO.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper()
-                                .writeValueAsString(updatedDTO)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(),
+        try {
+            return this.objectMapper.readValue(this.mockMvc
+                            .perform(patch("/api/parts/{id}", originalDTO.getId())
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(new ObjectMapper()
+                                            .writeValueAsString(updatedDTO)))
+                            .andReturn()
+                            .getResponse()
+                            .getContentAsString(),
 
-                PartDTO.class);
+                    PartDTO.class);
+        }
+        catch(Exception e)
+        {
+            log.warn("Failed to complete PATCH request to update Part");
+            return null;
+        }
     }
 
 

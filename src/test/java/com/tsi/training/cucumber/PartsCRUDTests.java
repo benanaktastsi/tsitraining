@@ -1,7 +1,7 @@
 package com.tsi.training.cucumber;
 
 import com.tsi.training.dto.PartDTO;
-import com.tsi.training.dto.PartDTOInputOutputTest;
+import com.tsi.training.cucumber.dto.PartDTOInputOutputTest;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -131,8 +131,8 @@ public class PartsCRUDTests {
     {
         this.resultPartDTOList = new LinkedList<>();
         for(PartDTO inputPartDTO : this.inputPartDTOList) {
-            this.resultPartDTOList
-                    .add(this.mockControllerTest.sendGetRequestFindPartByDescription(inputPartDTO));
+            PartDTO returnedDTO = this.mockControllerTest.sendGetRequestFindPartByDescription(inputPartDTO);
+            if(null != returnedDTO) this.resultPartDTOList.add(returnedDTO);
         }
     }
 
