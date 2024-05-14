@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,22 +62,22 @@ public class PartService  {
     }
 
     public void validateParts(ProcessResponse response) {
-        List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
-
-        if(CollectionUtils.isEmpty(descriptions)){
-                throw new NoPartExistsException("There is no parts used defined in database ");
+        if (CollectionUtils.isEmpty(response.getOrders())) {
+            throw new NoOrderExistsException("No orders present in input.");
         }
-        if(CollectionUtils.isEmpty(response.getOrders())){
-            throw new NoOrderExistsException("There is no parts used defined in database ");
+
+        List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
+        if (CollectionUtils.isEmpty(descriptions)) {
+            throw new NoPartExistsException("No part descriptions found in database.");
         }
 
         // Remove parts from order if not existing in database
         response.getOrders().forEach(order -> {
             List<String> removedParts = response.getParts().stream()
                     .filter(part -> !descriptions.contains(part))
-                    .peek(part -> log.warn("Removing part: {}", part))
+                    .peek(part -> log.warn("Removing part: {} from order with reference: {}", part, order.getOrderReference()))
                     .collect(Collectors.toList());
-            response.getParts().removeAll(removedParts);
+            order.getParts().removeIf(part -> removedParts.contains(part.getPartDescription()));
         });
 
         // If an order no longer has any parts, remove the order
