@@ -3,16 +3,16 @@ package com.tsi.training.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class NoPartExistsException
+@EqualsAndHashCode(callSuper = true)
+public class NoOrderExistsException
         extends RuntimeException {
 
     private String message;
 
-    public NoPartExistsException() {}
+    public NoOrderExistsException() {}
 
-    public NoPartExistsException(String msg)
+    public NoOrderExistsException(String msg)
     {
         super(msg);
         this.message = msg;

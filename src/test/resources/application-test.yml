@@ -5,9 +5,8 @@ spring:
     # url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/tsi
     url: jdbc:mysql://localhost:3306/tsi
     username: root
-    password: root
+    password: 1234
   jpa:
-    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
 
@@ -29,6 +28,6 @@ spring:
 
 json:
   folder:
-    input: ./src/main/resources/input/
-    output: ./src/main/resources/output/
-    sampleFileName: input.json
+    input: ./src/main/resources/input
+    output: ./src/main/resources/output
+    sampleFileName: input

@@ -13,12 +13,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Part extends BaseEntity {
-    @Id @GeneratedValue
-    private Long placeholder;
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(unique = true)
     private String description;
+
     private Double price;
 }

@@ -1,26 +1,27 @@
 package com.tsi.training.service;
 
 import com.tsi.training.dto.PartDTO;
-import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.entity.Part;
+import com.tsi.training.exception.NoOrderExistsException;
 import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.util.ProcessResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@Slf4j
 @Service
+@AllArgsConstructor
 public class PartService  {
 
     private final PartRepository partRepository;
     private final PartMapper partMapper;
-
 
     public List<PartDTO> getAllParts() {
         List<Part> parts = partRepository.findAll();
@@ -61,27 +62,25 @@ public class PartService  {
     }
 
     public void validateParts(ProcessResponse response) {
-        List<Part> parts = partRepository.findByDescriptionIn(response.getParts());
+        List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
 
-        // Extract unique part descriptions
-        Set<String> descriptions = new HashSet<>();
-        for (Part part : parts) {
-            descriptions.add(part.getDescription());
+        if(CollectionUtils.isEmpty(descriptions)){
+                throw new NoPartExistsException("There is no parts used defined in database ");
+        }
+        if(CollectionUtils.isEmpty(response.getOrders())){
+            throw new NoOrderExistsException("There is no parts used defined in database ");
         }
 
-        removePartsIfNotExist(response, descriptions);
-    }
+        // Remove parts from order if not existing in database
+        response.getOrders().forEach(order -> {
+            List<String> removedParts = response.getParts().stream()
+                    .filter(part -> !descriptions.contains(part))
+                    .peek(part -> log.warn("Removing part: {}", part))
+                    .collect(Collectors.toList());
+            response.getParts().removeAll(removedParts);
+        });
 
-    // Remove any parts from a list of orders that are not in the database
-    // TODO: Logging
-    private void removePartsIfNotExist(ProcessResponse response, Set<String> descriptions) {
-        for (OrderDTO order : response.getOrders()) {
-            order.getParts().removeIf(part -> !descriptions.contains(part.getPartDescription()));
-
-            // If an order no longer has any parts, remove the order
-            if (order.getParts().isEmpty()) {
-                response.getOrders().remove(order);
-            }
-        }
+        // If an order no longer has any parts, remove the order
+        response.getOrders().removeIf(order -> order.getParts().isEmpty());
     }
 }

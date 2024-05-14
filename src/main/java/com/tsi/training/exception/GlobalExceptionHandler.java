@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value
-            = NoPartExistsException.class)
+    @ExceptionHandler(value= NoPartExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse
     handleException(NoPartExistsException ex)
     {
         log.error("An exception was thrown (no such part exists)", ex);
-        return new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
 }
