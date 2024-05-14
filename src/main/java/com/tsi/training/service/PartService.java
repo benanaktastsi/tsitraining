@@ -1,6 +1,7 @@
 package com.tsi.training.service;
 
 import com.tsi.training.dto.PartDTO;
+import com.tsi.training.dto.response.OrderItemDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.exception.NoOrderExistsException;
 import com.tsi.training.exception.NoPartExistsException;
@@ -73,12 +74,16 @@ public class PartService  {
 
         // Remove parts from order if not existing in database
         response.getOrders().forEach(order -> {
-            List<String> removedParts = response.getParts().stream()
-                    .filter(part -> !descriptions.contains(part))
-                    .peek(part -> log.warn("Removing part: {} from order with reference: {}", part, order.getOrderReference()))
+            List<String> partsToRemove = order.getParts().stream()
+                    .filter(part -> !descriptions.contains(part.getPartDescription()))
+                    .peek(part -> log.warn("Removing part: {} from order with reference: {}",
+                            part.getPartDescription(), order.getOrderReference()))
+                    .map(OrderItemDTO::getPartDescription)
                     .collect(Collectors.toList());
-            order.getParts().removeIf(part -> removedParts.contains(part.getPartDescription()));
+
+            order.getParts().removeIf(part -> partsToRemove.contains(part.getPartDescription()));
         });
+
 
         // If an order no longer has any parts, remove the order
         response.getOrders().removeIf(order -> order.getParts().isEmpty());
