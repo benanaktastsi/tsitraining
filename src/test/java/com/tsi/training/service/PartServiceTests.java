@@ -58,6 +58,26 @@ public class PartServiceTests {
 
         // Assert
         assertNotNull(created);
-        assertEquals((Long) 1L, created.getId());
+        assertEquals(partdto.getId(), created.getId());
+        assertEquals(partdto.getDescription(), created.getDescription());
+        assertEquals(partdto.getPrice(), created.getPrice());
+    }
+
+    @Test
+    public void whenDescriptionGiven_ShouldReturnPart() {
+        // Arrange
+        Part part = new Part(1L, "test", 12.00);
+        PartDTO partdto = new PartDTO(1L, "test", 12.00);
+        when(partRepositoryMock.findByDescription("test")).thenReturn(Optional.of(part));
+        when(partMapperMock.toDto(part)).thenReturn(partdto);
+
+        // Act
+        PartDTO created = partService.getPartByDescription("test");
+
+        // Assert
+        assertNotNull(created);
+        assertEquals(partdto.getId(), created.getId());
+        assertEquals(partdto.getDescription(), created.getDescription());
+        assertEquals(partdto.getPrice(), created.getPrice());
     }
 }
