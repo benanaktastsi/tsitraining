@@ -1,6 +1,5 @@
-package com.tsi.training.cucumber;
+package com.tsi.training.cucumber.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tsi.training.dto.PartDTO;
@@ -15,12 +14,12 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @Slf4j
-public class MockControllerTest {
+public class MockPartControllerTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public MockControllerTest(MockMvc mockMvc)
+    public MockPartControllerTest(MockMvc mockMvc)
     {
         this.mockMvc = mockMvc;
     }
@@ -41,7 +40,7 @@ public class MockControllerTest {
                log.warn("ERROR {} - Failed to complete POST request to save Part", HttpURLConnection.HTTP_BAD_REQUEST);
                return null;
 
-           case HttpURLConnection.HTTP_OK:
+           case HttpURLConnection.HTTP_CREATED:
                return this.objectMapper.readValue(mvcResult
                                .getResponse()
                                .getContentAsString(),
@@ -49,7 +48,7 @@ public class MockControllerTest {
                        PartDTO.class);
        }
 
-        log.warn("Unknown Response Status");
+        log.warn("Unknown Response Status {}", mvcResult.getResponse().getStatus());
         return null;
     }
 
@@ -74,7 +73,7 @@ public class MockControllerTest {
                         PartDTO.class);
         }
 
-        log.warn("Unknown Response Status");
+        log.warn("Unknown Response Status {}", mvcResult.getResponse().getStatus());
         return null;
     }
 
@@ -113,7 +112,7 @@ public class MockControllerTest {
                         PartDTO.class);
         }
 
-        log.warn("Unknown Response Status");
+        log.warn("Unknown Response Status {}", mvcResult.getResponse().getStatus());
         return null;
     }
 
