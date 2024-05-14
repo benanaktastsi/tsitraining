@@ -1,3 +1,3 @@
-INSERT INTO part (description, price) VALUES ('Tyre',400.00);
-INSERT INTO part (description, price) VALUES ('Clutch', 255.99);
-INSERT INTO part (description, price) VALUES ('Steering', 300.00);
+INSERT INTO tsi.part (id, description, price) VALUES (1, 'Tyre', 10.00);
+INSERT INTO tsi.part (id, description, price) VALUES (2, 'Clutch', 20.12);
+INSERT INTO tsi.part (id, description, price) VALUES (3, 'Steering', 30.23);

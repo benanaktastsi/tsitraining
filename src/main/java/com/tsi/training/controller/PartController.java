@@ -1,6 +1,7 @@
 package com.tsi.training.controller;
 
 import com.tsi.training.dto.PartDTO;
+import com.tsi.training.repository.PartRepository;
 import com.tsi.training.service.PartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -123,4 +124,15 @@ public class PartController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * REMOVE LATER - USED TO RESET REPOSITORY DURING TESTING
+     */
+
+    @DeleteMapping("/nuke")
+    public void deleteAllEntries()
+    {
+        this.partService.deleteAllEntries();
+    }
+
 }
