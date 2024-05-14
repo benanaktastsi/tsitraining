@@ -1,16 +1,18 @@
 package com.tsi.training.cucumber;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tsi.training.dto.PartDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @Slf4j
 public class MockControllerTest {
@@ -23,48 +25,57 @@ public class MockControllerTest {
         this.mockMvc = mockMvc;
     }
 
-    public PartDTO sendPostRequestSavePart(PartDTO partDTO)
+
+    public PartDTO sendPostRequestSavePart(PartDTO partDTO) throws Exception
     {
-       try
+       MvcResult mvcResult = this.mockMvc
+               .perform(post("/api/parts")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(this.objectMapper
+                               .writeValueAsString(partDTO)))
+               .andReturn();
+
+       switch(mvcResult.getResponse().getStatus())
        {
-           return this.objectMapper.readValue(this.mockMvc
-                           .perform(post("/api/parts")
-                                   .contentType(MediaType.APPLICATION_JSON)
-                                   .content(this.objectMapper
-                                           .writeValueAsString(partDTO)))
-                           .andReturn()
-                           .getResponse()
-                           .getContentAsString(),
+           case HttpURLConnection.HTTP_BAD_REQUEST:
+               log.warn("ERROR {} - Failed to complete POST request to save Part", HttpURLConnection.HTTP_BAD_REQUEST);
+               return null;
 
-                   PartDTO.class);
-       }
-       catch(Exception e)
-       {
-           log.warn("Failed to complete POST request to save Part");
-           return null;
+           case HttpURLConnection.HTTP_OK:
+               return this.objectMapper.readValue(mvcResult
+                               .getResponse()
+                               .getContentAsString(),
+
+                       PartDTO.class);
        }
 
-
+        log.warn("Unknown Response Status");
+        return null;
     }
 
 
     public PartDTO sendGetRequestFindPartByDescription(PartDTO partDTO) throws Exception
     {
-        try
-        {
-            return this.objectMapper.readValue(this.mockMvc
-                            .perform(get("/api/parts/description/{description}", partDTO.getDescription()))
-                            .andReturn()
-                            .getResponse()
-                            .getContentAsString(),
+        MvcResult mvcResult = this.mockMvc
+                .perform(get("/api/parts/description/{description}", partDTO.getDescription()))
+                .andReturn();
 
-                    PartDTO.class);
-        }
-        catch(Exception e)
+        switch(mvcResult.getResponse().getStatus())
         {
-            log.warn("Failed to complete GET request to find Part by description.");
-            return null;
+            case HttpURLConnection.HTTP_BAD_REQUEST:
+                log.warn("ERROR {} - Failed to complete GET request to find Part by description", HttpURLConnection.HTTP_BAD_REQUEST);
+                return null;
+
+            case HttpURLConnection.HTTP_OK:
+                return this.objectMapper.readValue(mvcResult
+                                .getResponse()
+                                .getContentAsString(),
+
+                        PartDTO.class);
         }
+
+        log.warn("Unknown Response Status");
+        return null;
     }
 
     public List<PartDTO> sendGetRequestFindAllParts() throws Exception
@@ -81,30 +92,35 @@ public class MockControllerTest {
 
     public PartDTO sendPatchRequestUpdatePart(PartDTO originalDTO, PartDTO updatedDTO) throws Exception
     {
-        try {
-            return this.objectMapper.readValue(this.mockMvc
-                            .perform(patch("/api/parts/{id}", originalDTO.getId())
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(new ObjectMapper()
-                                            .writeValueAsString(updatedDTO)))
-                            .andReturn()
-                            .getResponse()
-                            .getContentAsString(),
+        MvcResult mvcResult = this.mockMvc
+                .perform(patch("/api/parts/{id}", originalDTO.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(updatedDTO)))
+                .andReturn();
 
-                    PartDTO.class);
-        }
-        catch(Exception e)
+        switch (mvcResult.getResponse().getStatus())
         {
-            log.warn("Failed to complete PATCH request to update Part");
-            return null;
+            case HttpURLConnection.HTTP_BAD_REQUEST:
+                log.warn("ERROR {} - Failed to complete PATCH request to update Part", HttpURLConnection.HTTP_BAD_REQUEST);
+                return null;
+
+            case HttpURLConnection.HTTP_OK:
+                return this.objectMapper.readValue(mvcResult
+                                .getResponse()
+                                .getContentAsString(),
+
+                        PartDTO.class);
         }
+
+        log.warn("Unknown Response Status");
+        return null;
     }
 
 
     public void sendDeleteRequestDeletePart(PartDTO partDTO) throws Exception
     {
-        this.mockMvc
-                .perform(delete("/api/parts/{id}", partDTO.getId()));
+        this.mockMvc.perform(delete("/api/parts/{id}", partDTO.getId()));
     }
 
     public void sendNukeRequest() throws Exception

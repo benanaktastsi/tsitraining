@@ -25,8 +25,8 @@ Feature: CRUD operations on Part Repository
       | 2        | new item 1        | 200         | 2         | new item 1         | 200          |
       # INVALID INPUTS - Existing entry
       | 1        | new item 1        | 100         | 1         | new item 1         | 100          |
-       # INVALID INPUTS - Existing ID (currently having issues with non-unique ID being replaced)
-      # | 1        | item 1            | 200         | 1         | item 1             | 200          |
+      # INVALID INPUTS - Existing ID (currently having issues with non-unique ID being replaced)
+      | 1        | item 1            | 200         | 1         | item 1             | 200          |
 
 
   Scenario Outline: READ from Part Repository
