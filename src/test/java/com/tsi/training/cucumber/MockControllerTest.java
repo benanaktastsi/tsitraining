@@ -41,7 +41,7 @@ public class MockControllerTest {
                log.warn("ERROR {} - Failed to complete POST request to save Part", HttpURLConnection.HTTP_BAD_REQUEST);
                return null;
 
-           case HttpURLConnection.HTTP_OK:
+           case HttpURLConnection.HTTP_CREATED:
                return this.objectMapper.readValue(mvcResult
                                .getResponse()
                                .getContentAsString(),
@@ -49,7 +49,7 @@ public class MockControllerTest {
                        PartDTO.class);
        }
 
-        log.warn("Unknown Response Status");
+        log.warn("Unknown Response Status {}", mvcResult.getResponse().getStatus());
         return null;
     }
 
@@ -74,7 +74,7 @@ public class MockControllerTest {
                         PartDTO.class);
         }
 
-        log.warn("Unknown Response Status");
+        log.warn("Unknown Response Status {}", mvcResult.getResponse().getStatus());
         return null;
     }
 
@@ -113,7 +113,7 @@ public class MockControllerTest {
                         PartDTO.class);
         }
 
-        log.warn("Unknown Response Status");
+        log.warn("Unknown Response Status {}", mvcResult.getResponse().getStatus());
         return null;
     }
 
