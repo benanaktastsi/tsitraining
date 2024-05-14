@@ -1,7 +1,3 @@
-# [ SETUP ]
-# In order for these tests to work, the following changes to the code are needed:
-# - Part (entity) ID's @GeneratedValue annotation is removed
-
 Feature: CRUD operations on Part Repository
 
   Background:
