@@ -18,7 +18,7 @@ public class Part extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO) // Causes problems with the Cucumber tests as it uses the ID
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String description;
 
     private Double price;
