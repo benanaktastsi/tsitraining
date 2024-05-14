@@ -1,4 +1,4 @@
-package com.tsi.training.util;
+package com.tsi.training.cucumber;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

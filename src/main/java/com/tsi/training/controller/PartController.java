@@ -20,16 +20,13 @@ public class PartController {
 
     private final PartService partService;
 
-    private final PartRepository partRepository;
-
     /**
      * Constructor injection for PartService.
      *
      * @param partService Part service
      */
-    public PartController(PartService partService, PartRepository partRepository) {
+    public PartController(PartService partService) {
         this.partService = partService;
-        this.partRepository = partRepository;
     }
 
     /**
@@ -131,9 +128,11 @@ public class PartController {
     /**
      * REMOVE LATER - USED TO RESET REPOSITORY DURING TESTING
      */
+
     @DeleteMapping("/nuke")
     public void deleteAllEntries()
     {
-        this.partRepository.deleteAll();
+        this.partService.deleteAllEntries();
     }
+
 }

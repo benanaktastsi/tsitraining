@@ -1,9 +1,7 @@
-package com.tsi.training.stepdefs;
+package com.tsi.training.cucumber;
 
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.dto.PartDTOInputOutputTest;
-import com.tsi.training.entity.Part;
-import com.tsi.training.util.MockControllerTest;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -139,9 +137,14 @@ public class PartsCRUDTests {
     }
 
     @Then("expect Part returned with")
-    public void thenExpectPartReturned(PartDTO expectedPartDTO)
+    public void thenExpectPartReturned(PartDTOInputOutputTest expectedPartDTOInputOutputTest)
     {
-        for(PartDTO resultPartDTO : resultPartDTOList) Assert.assertEquals(expectedPartDTO, resultPartDTO);
+        List<PartDTO> expectedPartDTOList = expectedPartDTOInputOutputTest.getOutputPartDTOList()
+                .stream()
+                .sorted(Comparator.comparing(PartDTO :: getId).reversed())
+                .collect(Collectors.toList());;
+
+        Assert.assertEquals(expectedPartDTOList, this.resultPartDTOList);
     }
 
 
@@ -153,6 +156,7 @@ public class PartsCRUDTests {
     @Given("an updated Part DTO with")
     public void givenUpdatedPartDTO(PartDTOInputOutputTest partDTOInputOutputTest)
     {
+        this.updatedPartDTOList = new LinkedList<>();
         this.updatedPartDTOList.addAll(partDTOInputOutputTest.getInputPartDTOList());
     }
 
