@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,5 +83,16 @@ public class PartService  {
 
         // If an order no longer has any parts, remove the order
         response.getOrders().removeIf(order -> order.getParts().isEmpty());
+    }
+
+
+
+
+    /**
+     * REMOVE LATER - USED TO RESET REPOSITORY DURING CUCUMBER TESTING
+     */
+    public void deleteAllEntries()
+    {
+        this.partRepository.deleteAll();
     }
 }

@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Part extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO) // Causes problems with the Cucumber tests as it uses the ID
     private Long id;
 
     @Column(unique = true)
