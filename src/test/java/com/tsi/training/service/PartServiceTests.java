@@ -1,7 +1,9 @@
 package com.tsi.training.service;
 
+import com.tsi.training.dto.PartDTO;
 import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.dto.response.OrderItemDTO;
+import com.tsi.training.entity.Part;
 import com.tsi.training.exception.NoOrderExistsException;
 import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
@@ -14,7 +16,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +60,79 @@ public class PartServiceTests {
     }
 
     @Test
+    public void whenSavePart_shouldReturnPart() {
+        // Arrange
+        PartDTO partdto = new PartDTO(1L, "test", 12.00);
+        Part part = new Part(1L, "test", 12.00);
+        when(partMapperMock.toEntity(partdto)).thenReturn(part);
+        when(partRepositoryMock.save(part)).thenReturn(part);
+        when(partMapperMock.toDto(part)).thenReturn(partdto);
+
+        // Act
+        PartDTO created = partService.createPart(partdto);
+
+        // Assert
+        assertNotNull(created);
+        assertEquals(partdto.getId(), created.getId());
+        assertEquals(partdto.getDescription(), created.getDescription());
+        assertEquals(partdto.getPrice(), created.getPrice());
+    }
+
+    @Test
+    public void whenIdGiven_ShouldReturnPart() {
+        // Arrange
+        Part part = new Part(1L, "test", 12.00);
+        PartDTO partdto = new PartDTO(1L, "test", 12.00);
+        when(partRepositoryMock.findById(1L)).thenReturn(Optional.of(part));
+        when(partMapperMock.toDto(part)).thenReturn(partdto);
+
+        // Act
+        PartDTO created = partService.getPartById(1L);
+
+        // Assert
+        assertNotNull(created);
+        assertEquals(partdto.getId(), created.getId());
+        assertEquals(partdto.getDescription(), created.getDescription());
+        assertEquals(partdto.getPrice(), created.getPrice());
+    }
+
+    @Test
+    public void whenIncorrectIdGiven_ShouldThrowError() {
+        // Arrange
+        Part part = new Part(1L, "test", 12.00);
+        PartDTO partdto = new PartDTO(1L, "test", 12.00);
+        when(partRepositoryMock.findById(1L)).thenReturn(Optional.of(part));
+        when(partMapperMock.toDto(part)).thenReturn(partdto);
+
+        // Act
+        NoPartExistsException thrown = Assert.assertThrows(
+                NoPartExistsException.class,
+                () -> partService.getPartById(5L)
+        );
+
+        // Assert
+        assertEquals("Part not found with id 5", thrown.getMessage());
+    }
+
+    @Test
+    public void whenDescriptionGiven_ShouldReturnPart() {
+        // Arrange
+        Part part = new Part(1L, "test", 12.00);
+        PartDTO partdto = new PartDTO(1L, "test", 12.00);
+        when(partRepositoryMock.findByDescription("test")).thenReturn(Optional.of(part));
+        when(partMapperMock.toDto(part)).thenReturn(partdto);
+
+        // Act
+        PartDTO created = partService.getPartByDescription("test");
+
+        // Assert
+        assertNotNull(created);
+        assertEquals(partdto.getId(), created.getId());
+        assertEquals(partdto.getDescription(), created.getDescription());
+        assertEquals(partdto.getPrice(), created.getPrice());
+    }
+
+    @Test
     public void whenPartIsMissingFromDatabase_ThenPartShouldBeRemovedFromOrders_AndEmptyOrdersShouldBeDeleted() {
         // Arrange
         List<String> descriptions = new ArrayList<>(Arrays.asList("Door", "Engine"));
@@ -66,9 +143,9 @@ public class PartServiceTests {
         partService.validateParts(processResponse);
 
         // Assert
-        Assert.assertEquals(2, processResponse.getOrders().size());
-        Assert.assertEquals(2, processResponse.getOrders().get(0).getParts().size());
-        Assert.assertEquals(1, processResponse.getOrders().get(1).getParts().size());
+        assertEquals(2, processResponse.getOrders().size());
+        assertEquals(2, processResponse.getOrders().get(0).getParts().size());
+        assertEquals(1, processResponse.getOrders().get(1).getParts().size());
 
         for (OrderDTO order : processResponse.getOrders()) {
             for (OrderItemDTO part : order.getParts()) {
@@ -88,10 +165,10 @@ public class PartServiceTests {
         partService.validateParts(processResponse);
 
         // Assert
-        Assert.assertEquals(3, processResponse.getOrders().size());
-        Assert.assertEquals(2, processResponse.getOrders().get(0).getParts().size());
-        Assert.assertEquals(2, processResponse.getOrders().get(1).getParts().size());
-        Assert.assertEquals(1, processResponse.getOrders().get(2).getParts().size());
+        assertEquals(3, processResponse.getOrders().size());
+        assertEquals(2, processResponse.getOrders().get(0).getParts().size());
+        assertEquals(2, processResponse.getOrders().get(1).getParts().size());
+        assertEquals(1, processResponse.getOrders().get(2).getParts().size());
 
         for (OrderDTO order : processResponse.getOrders()) {
             for (OrderItemDTO part : order.getParts()) {
@@ -113,7 +190,7 @@ public class PartServiceTests {
                 () -> partService.validateParts(processResponse)
         );
 
-        Assert.assertEquals("No part descriptions found in database.", thrown.getMessage());
+        assertEquals("No part descriptions found in database.", thrown.getMessage());
     }
 
     @Test
@@ -127,6 +204,6 @@ public class PartServiceTests {
                 () -> partService.validateParts(emptyResponse)
         );
 
-        Assert.assertEquals("No orders present in input.", thrown.getMessage());
+        assertEquals("No orders present in input.", thrown.getMessage());
     }
 }
