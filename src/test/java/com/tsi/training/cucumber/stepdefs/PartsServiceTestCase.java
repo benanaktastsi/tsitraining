@@ -31,6 +31,7 @@ public class PartsServiceTestCase {
     private final Map<String, PartDTO> partsInRepositoryByDescription;
     private PartDTO inputPartDTO;
     private Long inputID;
+    private String inputDescription;
     private PartDTO resultPartDTO;
 
     public PartsServiceTestCase()
@@ -79,6 +80,9 @@ public class PartsServiceTestCase {
 
     }
 
+    // ========== ========== ========== ========== ==========
+    // CREATE PART
+    // ========== ========== ========== ========== ==========
 
     @Given("a PartDTO with \\(PartsService.feature)")
     public void givenPartDTO(PartDTO partDTO)
@@ -117,6 +121,8 @@ public class PartsServiceTestCase {
 
 
     // ========== ========== ========== ========== ==========
+    // FIND PART BY ID
+    // ========== ========== ========== ========== ==========
 
     @Given("an ID input {int} \\(PartsService.feature)")
     public void givenIDInput(int id)
@@ -134,4 +140,29 @@ public class PartsServiceTestCase {
 
         this.resultPartDTO = this.partService.getPartById(this.inputID);
     }
+
+
+    // ========== ========== ========== ========== ==========
+    // FIND PART BY DESCRIPTION
+    // ========== ========== ========== ========== ==========
+
+
+    @Given("a description input {string} \\(PartsService.feature)")
+    public void givenDescriptionInput(String description)
+    {
+        this.inputDescription = description;
+    }
+
+    @When("get Part by description \\(PartsService.feature)")
+    public void whenGetPartByDescription()
+    {
+        Mockito.when(this.partRepository.findByDescription(this.inputDescription))
+                .thenReturn(Optional.of(new Part()));
+        Mockito.when(this.partMapper.toDto(Mockito.any(Part.class)))
+                .thenReturn(this.partsInRepositoryByDescription.get(this.inputDescription));
+
+        this.resultPartDTO = this.partService.getPartByDescription(this.inputDescription);
+    }
+
+
 }

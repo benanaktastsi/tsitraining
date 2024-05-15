@@ -36,6 +36,21 @@ Feature: PartService business logic cases
     | 1  | item 1      | 100   |
 
 
+  Scenario: Get Part by description
+    Given an existing Part Repository with (PartsService.feature)
+      | id | description | price |
+      | 1 | item 1 | 100 |
+      | 2 | item 2 | 200 |
+      | 3 | item 3 | 300 |
+    And a description input "item 1" (PartsService.feature)
+      # | description |
+      # | item 1 |
+    When get Part by description (PartsService.feature)
+    Then expect returned PartDTO with (PartsService.feature)
+      | id | description | price |
+      | 1  | item 1      | 100   |
+
+
   Scenario: Get all Parts
     Given an existing Part Repository with
       | id | description | price |
