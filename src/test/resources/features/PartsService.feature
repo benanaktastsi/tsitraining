@@ -22,16 +22,16 @@ Feature: PartService business logic cases
 
 
   Scenario: Get Part by ID
-    Given an existing Part Repository with
+    Given an existing Part Repository with (PartsService.feature)
     | id | description | price |
     | 1 | item 1 | 100 |
     | 2 | item 2 | 200 |
     | 3 | item 3 | 300 |
-      And an ID input
-      | id |
-      | 1 |
-    When get Part by ID
-    Then expect returned PartDTO with
+      And an ID input 1 (PartsService.feature)
+      # | id |
+      # | 1 |
+    When get Part by ID (PartsService.feature)
+    Then expect returned PartDTO with (PartsService.feature)
     | id | description | price |
     | 1  | item 1      | 100   |
 

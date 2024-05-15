@@ -13,11 +13,10 @@ import io.cucumber.java.en.When;
 import io.cucumber.junit.Cucumber;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Mockito.mock;
 
@@ -28,8 +27,10 @@ public class PartsServiceTestCase {
     private final PartRepository partRepository;
     private final PartMapper partMapper;
 
-    private final List<PartDTO> partsInRepository;
+    private final Map<Long, PartDTO> partsInRepositoryByID;
+    private final Map<String, PartDTO> partsInRepositoryByDescription;
     private PartDTO inputPartDTO;
+    private Long inputID;
     private PartDTO resultPartDTO;
 
     public PartsServiceTestCase()
@@ -38,7 +39,9 @@ public class PartsServiceTestCase {
         this.partMapper = Mockito.mock(PartMapper.class);
         this.partService = new PartService(this.partRepository, this.partMapper);
 
-        this.partsInRepository = new LinkedList<>();
+        this.partsInRepositoryByID = new HashMap<>();
+        this.partsInRepositoryByDescription = new HashMap<>();
+
     }
 
 
@@ -69,11 +72,11 @@ public class PartsServiceTestCase {
             Mockito.when(this.partMapper.toDto(Mockito.any(Part.class)))
                     .thenReturn(partDTO);
 
-            this.partsInRepository.add(
-                    this.partService.createPart(partDTO));
+            this.resultPartDTO = this.partService.createPart(partDTO);
+            this.partsInRepositoryByID.put(this.resultPartDTO.getId(), this.resultPartDTO);
+            this.partsInRepositoryByDescription.put(this.resultPartDTO.getDescription(), this.resultPartDTO);
         }
 
-        System.out.println(this.partsInRepository);
     }
 
 
@@ -94,7 +97,8 @@ public class PartsServiceTestCase {
                 .thenReturn(this.inputPartDTO);
 
         this.resultPartDTO = this.partService.createPart(this.inputPartDTO);
-        this.partsInRepository.add(this.resultPartDTO);
+        this.partsInRepositoryByID.put(this.resultPartDTO.getId(), this.resultPartDTO);
+        this.partsInRepositoryByDescription.put(this.resultPartDTO.getDescription(), this.resultPartDTO);
     }
 
     @Then("expect returned PartDTO with \\(PartsService.feature)")
@@ -106,6 +110,28 @@ public class PartsServiceTestCase {
     @Then("expect a Part Repository with \\(PartsService.feature)")
     public void thenExpectPartRepository(List<PartDTO> expectedPartDTOList)
     {
-        Assert.assertEquals(expectedPartDTOList, this.partsInRepository);
+        List<PartDTO> resultPartDTOList = new ArrayList<>(this.partsInRepositoryByID.values());
+        Assert.assertEquals(expectedPartDTOList, resultPartDTOList);
+    }
+
+
+
+    // ========== ========== ========== ========== ==========
+
+    @Given("an ID input {int} \\(PartsService.feature)")
+    public void givenIDInput(int id)
+    {
+        this.inputID = (long) id;
+    }
+
+    @When("get Part by ID \\(PartsService.feature)")
+    public void whenGetPartByID()
+    {
+        Mockito.when(this.partRepository.findById(this.inputID))
+                .thenReturn(Optional.of(new Part()));
+        Mockito.when(this.partMapper.toDto(Mockito.any(Part.class)))
+                .thenReturn(this.partsInRepositoryByID.get(this.inputID));
+
+        this.resultPartDTO = this.partService.getPartById(this.inputID);
     }
 }
