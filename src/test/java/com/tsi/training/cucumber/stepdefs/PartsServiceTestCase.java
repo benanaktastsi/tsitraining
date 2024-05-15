@@ -50,6 +50,9 @@ public class PartsServiceTestCase {
     }
 
 
+    // ==================================================
+    // Convert Cucumber inputs to a PartDTO object
+    // ==================================================
     @DataTableType
     public PartDTO convert(Map<String, String> entry)
     {
@@ -74,7 +77,7 @@ public class PartsServiceTestCase {
      * - Get Part by description
      * - Get all Parts
      * - Update Part
-     * - Delete Part
+     * - TODO Delete Part
      */
     @Given("an existing Part Repository with \\(PartsService.feature)")
     public void givenExistingPartRepository(List<PartDTO> partDTOList) throws InstantiationException, IllegalAccessException {
@@ -102,7 +105,7 @@ public class PartsServiceTestCase {
      * - Get Part by description
      * - Get all Parts
      * - Update Part
-     * - Delete Part
+     * - TODO Delete Part
      */
     @Given("a PartDTO with \\(PartsService.feature)")
     public void givenPartDTO(PartDTO partDTO)
@@ -114,7 +117,7 @@ public class PartsServiceTestCase {
      * Used by Scenarios:
      * - Get Part by ID
      * - Update Part
-     * - Delete Part
+     * - TODO Delete Part
      */
     @Given("an ID input {int} \\(PartsService.feature)")
     public void givenIDInput(int id)
@@ -202,6 +205,27 @@ public class PartsServiceTestCase {
         this.resultPartDTOList = this.partService.getAllParts();
     }
 
+    /**
+     * Used by Scenarios:
+     * - Update Part
+     */
+    @When("update Part \\(PartsService.feature)")
+    public void whenUpdatePart()
+    {
+        Mockito.when(this.partRepository.findById(this.inputID))
+                .thenReturn(Optional.of(new Part()));
+        Mockito.when(this.partMapper.toEntity(Mockito.any(PartDTO.class)))
+                .thenReturn(new Part());
+        Mockito.when(this.partRepository.save(Mockito.any(Part.class)))
+                .thenReturn(new Part());
+        Mockito.when(this.partMapper.toDto(Mockito.any(Part.class)))
+                .thenReturn(this.inputPartDTO);
+
+        this.resultPartDTO = this.partService.updatePart(this.inputID, this.inputPartDTO);
+        this.partsInRepositoryByID.remove(this.inputID);
+        this.partsInRepositoryByID.put(this.resultPartDTO.getId(), this.resultPartDTO);
+    }
+
 
     // ========== ========== ========== ========== ==========
     // THEN steps
@@ -224,7 +248,7 @@ public class PartsServiceTestCase {
      * Used by Scenarios:
      * - Create Part
      * - Update Part
-     * - Delete Part
+     * - TODO Delete Part
      */
     @Then("expect a Part Repository with \\(PartsService.feature)")
     public void thenExpectPartRepository(List<PartDTO> expectedPartDTOList)
