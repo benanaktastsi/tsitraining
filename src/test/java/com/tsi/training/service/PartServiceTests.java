@@ -2,6 +2,8 @@ package com.tsi.training.service;
 
 import com.tsi.training.dto.response.OrderDTO;
 import com.tsi.training.dto.response.OrderItemDTO;
+import com.tsi.training.exception.NoOrderExistsException;
+import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.util.ProcessResponse;
@@ -96,5 +98,35 @@ public class PartServiceTests {
                 Assert.assertTrue(descriptions.contains(part.getPartDescription()));
             }
         }
+    }
+
+    @Test
+    public void whenNoPartDescriptionsAreFoundInDatabase_NoPartExistsExceptionIsThrown() {
+        // Arrange
+        List<String> descriptions = new ArrayList<>();
+        when(partRepositoryMock.findByDescriptionIn(processResponse.getParts()))
+                .thenReturn(descriptions);
+
+        // Act & Assert
+        NoPartExistsException thrown = Assert.assertThrows(
+                NoPartExistsException.class,
+                () -> partService.validateParts(processResponse)
+        );
+
+        Assert.assertEquals("No part descriptions found in database.", thrown.getMessage());
+    }
+
+    @Test
+    public void whenOrderListInInputIsEmpty_NoOrderExistsExceptionIsThrown() {
+        // Arrange
+        ProcessResponse emptyResponse = new ProcessResponse();
+
+        // Act & Assert
+        NoOrderExistsException thrown = Assert.assertThrows(
+                NoOrderExistsException.class,
+                () -> partService.validateParts(emptyResponse)
+        );
+
+        Assert.assertEquals("No orders present in input.", thrown.getMessage());
     }
 }
