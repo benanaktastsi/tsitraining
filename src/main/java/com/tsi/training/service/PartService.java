@@ -1,19 +1,24 @@
 package com.tsi.training.service;
 
 import com.tsi.training.dto.PartDTO;
-import com.tsi.training.dto.response.OrderDTO;
+import com.tsi.training.dto.response.OrderItemDTO;
 import com.tsi.training.entity.Part;
+import com.tsi.training.exception.NoOrderExistsException;
 import com.tsi.training.exception.NoPartExistsException;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.util.ProcessResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@Slf4j
 @Service
+@AllArgsConstructor
 public class PartService  {
 
     private final PartRepository partRepository;
@@ -58,16 +63,40 @@ public class PartService  {
     }
 
     public void validateParts(ProcessResponse response) {
+        if (CollectionUtils.isEmpty(response.getOrders())) {
+            throw new NoOrderExistsException("No orders present in input.");
+        }
+
         List<String> descriptions = partRepository.findByDescriptionIn(response.getParts());
+        if (CollectionUtils.isEmpty(descriptions)) {
+            throw new NoPartExistsException("No part descriptions found in database.");
+        }
 
         // Remove parts from order if not existing in database
-        for (OrderDTO order : response.getOrders()) {
-            order.getParts().removeIf(part -> !descriptions.contains(part.getPartDescription()));
+        response.getOrders().forEach(order -> {
+            List<String> partsToRemove = order.getParts().stream()
+                    .filter(part -> !descriptions.contains(part.getPartDescription()))
+                    .peek(part -> log.warn("Removing part: {} from order with reference: {}",
+                            part.getPartDescription(), order.getOrderReference()))
+                    .map(OrderItemDTO::getPartDescription)
+                    .collect(Collectors.toList());
 
-            // If an order no longer has any parts, remove the order
-            if (order.getParts().isEmpty()) {
-                response.getOrders().remove(order);
-            }
-        }
+            order.getParts().removeIf(part -> partsToRemove.contains(part.getPartDescription()));
+        });
+
+
+        // If an order no longer has any parts, remove the order
+        response.getOrders().removeIf(order -> order.getParts().isEmpty());
+    }
+
+
+
+
+    /**
+     * REMOVE LATER - USED TO RESET REPOSITORY DURING CUCUMBER TESTING
+     */
+    public void deleteAllEntries()
+    {
+        this.partRepository.deleteAll();
     }
 }

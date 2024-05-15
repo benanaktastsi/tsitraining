@@ -1,20 +1,25 @@
 package com.tsi.training.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 public class OutputWriter {
 
-    public static void writeToFile(Map<String, String> DealerMap) throws IOException {
-        DealerMap.forEach((dealer, JSONString) -> {
-            String filename = "./src/main/resources/"+ dealer;
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-                writer.write(JSONString);writer.close();
+    private OutputWriter() {
+    }
+
+    public static void writeToFile(Map<String, String> dealerMap, String outputFolderPath)  {
+        dealerMap.forEach((dealer, jsonString) -> {
+            String filename = outputFolderPath + dealer + ".json";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+                writer.write(jsonString);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                log.error("Error writing to file: " + e.getMessage());
             }
         });
     }
