@@ -77,7 +77,7 @@ public class PartsServiceTestCase {
      * - Get Part by description
      * - Get all Parts
      * - Update Part
-     * - TODO Delete Part
+     * - Delete Part
      */
     @Given("an existing Part Repository with \\(PartsService.feature)")
     public void givenExistingPartRepository(List<PartDTO> partDTOList) throws InstantiationException, IllegalAccessException {
@@ -105,7 +105,7 @@ public class PartsServiceTestCase {
      * - Get Part by description
      * - Get all Parts
      * - Update Part
-     * - TODO Delete Part
+     * - Delete Part
      */
     @Given("a PartDTO with \\(PartsService.feature)")
     public void givenPartDTO(PartDTO partDTO)
@@ -117,7 +117,7 @@ public class PartsServiceTestCase {
      * Used by Scenarios:
      * - Get Part by ID
      * - Update Part
-     * - TODO Delete Part
+     * - Delete Part
      */
     @Given("an ID input {int} \\(PartsService.feature)")
     public void givenIDInput(int id)
@@ -226,6 +226,25 @@ public class PartsServiceTestCase {
         this.partsInRepositoryByID.put(this.resultPartDTO.getId(), this.resultPartDTO);
     }
 
+    /**
+     * Used by Scenarios:
+     * - Delete Part
+     */
+    @When("delete Part \\(PartsService.feature)")
+    public void whenDeletePart()
+    {
+        Mockito.when(this.partRepository.existsById(Mockito.any()))
+                .thenReturn(this.partsInRepositoryByID.containsKey(this.inputID));
+        Mockito.doAnswer(answer -> {
+                    this.partsInRepositoryByID.remove(this.inputID);
+                    return null;
+                    })
+                .when(this.partRepository)
+                .deleteById(Mockito.any());
+
+        this.partService.deletePart(this.inputID);
+    }
+
 
     // ========== ========== ========== ========== ==========
     // THEN steps
@@ -248,7 +267,7 @@ public class PartsServiceTestCase {
      * Used by Scenarios:
      * - Create Part
      * - Update Part
-     * - TODO Delete Part
+     * - Delete Part
      */
     @Then("expect a Part Repository with \\(PartsService.feature)")
     public void thenExpectPartRepository(List<PartDTO> expectedPartDTOList)
@@ -266,5 +285,6 @@ public class PartsServiceTestCase {
     {
         Assert.assertEquals(expectedPartDTOList, this.resultPartDTOList);
     }
+
 
 }

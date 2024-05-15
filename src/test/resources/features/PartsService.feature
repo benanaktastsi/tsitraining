@@ -88,7 +88,6 @@ Feature: PartService business logic cases
         | 3 | item 3 | 300 |
 
 
-
   Scenario: Delete Part
     Given an existing Part Repository with (PartsService.feature)
       | id | description | price |
