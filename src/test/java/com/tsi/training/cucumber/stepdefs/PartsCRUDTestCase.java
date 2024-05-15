@@ -1,5 +1,6 @@
-package com.tsi.training.cucumber;
+package com.tsi.training.cucumber.stepdefs;
 
+import com.tsi.training.cucumber.controller.MockPartControllerTest;
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.cucumber.dto.PartDTOInputOutputTest;
 import io.cucumber.java.DataTableType;
@@ -13,24 +14,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
 @RunWith(Cucumber.class)
 @AutoConfigureMockMvc(printOnlyOnFailure = true)
-public class PartsCRUDTests {
+public class PartsCRUDTestCase {
 
-    private final MockControllerTest mockControllerTest;
+    private final MockPartControllerTest mockControllerTest;
 
     // private MvcResult mvcResult;
     private List<PartDTO> inputPartDTOList;
     private List<PartDTO> updatedPartDTOList;
     private List<PartDTO> resultPartDTOList;
 
-    public PartsCRUDTests(MockMvc mockMvc)
+    public PartsCRUDTestCase(MockMvc mockMvc)
     {
-        this.mockControllerTest = new MockControllerTest(mockMvc);
+        this.mockControllerTest = new MockPartControllerTest(mockMvc);
     }
 
 
@@ -63,13 +63,20 @@ public class PartsCRUDTests {
         for(int i = 0; i < descriptionArray.length; i++)
         {
             PartDTO newPartDTO = new PartDTO();
-            newPartDTO.setId(Long.valueOf(idArray[i]));
+            // newPartDTO.setId(Long.valueOf(idArray[i]));
             newPartDTO.setDescription(descriptionArray[i]);
             newPartDTO.setPrice(Double.valueOf(priceArray[i]));
 
             partDTOList.add(newPartDTO);
         }
         return partDTOList;
+    }
+
+
+    @Given("an empty Part Repository")
+    public void aFreshPartRepository() throws Exception
+    {
+        this.mockControllerTest.sendNukeRequest();
     }
 
 
@@ -82,7 +89,6 @@ public class PartsCRUDTests {
     @Given("an existing Part Repository with")
     public void givenAnExistingPartRepository(PartDTOInputOutputTest partDTOInputOutputTest) throws Exception
     {
-        this.mockControllerTest.sendNukeRequest();
 
         List<PartDTO> partDTOList = partDTOInputOutputTest.getInputPartDTOList();
         for(PartDTO partDTO : partDTOList) this.mockControllerTest.sendPostRequestSavePart(partDTO);

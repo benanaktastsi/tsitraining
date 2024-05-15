@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 @SpringBootTest
 @CucumberOptions(
         stepNotifications = true,
-        glue = {"src/java/com/tsi/training/cucumber"},
+        glue = {"src/java/com/tsi/training/cucumber/stepdefs"},
         plugin = "pretty",
         features = {"src/test/resources/features"})
 @ContextConfiguration(classes = OrderProcessApplication.class)

@@ -4,6 +4,9 @@
 
 Feature: CRUD operations on Part Repository
 
+  Background:
+    Given an empty Part Repository
+
   Scenario Outline: CREATE a Part
     Given an existing Part Repository with
       | id_input   | description_input   | price_input   |
@@ -21,13 +24,13 @@ Feature: CRUD operations on Part Repository
       # 2. VALID - Existing repo
       # 3. INVALID - Existing Part Description
       # 4. INVALID - Existing Part ID + Description
-      # (DOESN'T WORK AS ID IS AUTO-GENERATED) 5. INVALID - Existing Part ID
+      # 5. VALID - Existing Part ID, however, ID is auto-generated
       | id_input | description_input | price_input | id_output | description_output | price_output |
       |          |                   |             | 1         | new item 1         | 100          |
       | 2        | item 2            | 200         | 1,2       | new item 1,item 2  | 100,200      |
       | 2        | new item 1        | 200         | 2         | new item 1         | 200          |
       | 1        | new item 1        | 100         | 1         | new item 1         | 100          |
-      # | 1        | item 1            | 200         | 1         | item 1             | 200          |
+      | 1        | item 1            | 200         | 1,2       | new item 1,item 1  | 100,200      |
 
 
   Scenario Outline: READ from Part Repository

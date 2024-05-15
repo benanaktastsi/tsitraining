@@ -1,6 +1,5 @@
-package com.tsi.training.cucumber;
+package com.tsi.training.cucumber.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tsi.training.dto.PartDTO;
@@ -15,12 +14,12 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @Slf4j
-public class MockControllerTest {
+public class MockPartControllerTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public MockControllerTest(MockMvc mockMvc)
+    public MockPartControllerTest(MockMvc mockMvc)
     {
         this.mockMvc = mockMvc;
     }
