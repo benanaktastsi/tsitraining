@@ -1,6 +1,8 @@
 package com.tsi.training.cucumber.stepdefs;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.tsi.training.cucumber.mapper.MockPartMapper;
+import com.tsi.training.cucumber.repository.MockPartRepository;
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.mapper.PartMapper;
@@ -31,6 +33,9 @@ public class PartsServiceTestCase {
     private final Map<Long, PartDTO> partsInRepositoryByID;
     private final Map<String, PartDTO> partsInRepositoryByDescription;
 
+    private final MockPartRepository mockPartRepository;
+    private final MockPartMapper mockPartMapper;
+
     private PartDTO inputPartDTO;
     private Long inputID;
     private String inputDescription;
@@ -47,6 +52,8 @@ public class PartsServiceTestCase {
         this.partsInRepositoryByID = new HashMap<>();
         this.partsInRepositoryByDescription = new HashMap<>();
 
+        this.mockPartRepository = new MockPartRepository();
+        this.mockPartMapper = new MockPartMapper();
     }
 
 
