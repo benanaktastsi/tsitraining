@@ -51,14 +51,14 @@ Feature: PartService business logic cases
       | 1  | item 1      | 100   |
 
 
-  Scenario: Get all Parts
-    Given an existing Part Repository with
+  Scenario: Get all Parts (PartsService.feature)
+    Given an existing Part Repository with (PartsService.feature)
       | id | description | price |
       | 1 | item 1 | 100 |
       | 2 | item 2 | 200 |
       | 3 | item 3 | 300 |
-    When get all Parts
-    Then expect returned PartDTO list with
+    When get all Parts (PartsService.feature)
+    Then expect returned PartDTO list with (PartsService.feature)
       | id | description | price |
       | 1 | item 1 | 100 |
       | 2 | item 2 | 200 |

@@ -1,5 +1,6 @@
 package com.tsi.training.cucumber.stepdefs;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.mapper.PartMapper;
@@ -29,10 +30,13 @@ public class PartsServiceTestCase {
 
     private final Map<Long, PartDTO> partsInRepositoryByID;
     private final Map<String, PartDTO> partsInRepositoryByDescription;
+
     private PartDTO inputPartDTO;
     private Long inputID;
     private String inputDescription;
+
     private PartDTO resultPartDTO;
+    private List<PartDTO> resultPartDTOList;
 
     public PartsServiceTestCase()
     {
@@ -59,8 +63,19 @@ public class PartsServiceTestCase {
     }
 
 
+    // ========== ========== ========== ========== ==========
+    // GIVEN steps
+    // ========== ========== ========== ========== ==========
 
-
+    /**
+     * Used by Scenarios:
+     * - Create Part
+     * - Get Part by ID
+     * - Get Part by description
+     * - Get all Parts
+     * - Update Part
+     * - Delete Part
+     */
     @Given("an existing Part Repository with \\(PartsService.feature)")
     public void givenExistingPartRepository(List<PartDTO> partDTOList) throws InstantiationException, IllegalAccessException {
 
@@ -80,18 +95,55 @@ public class PartsServiceTestCase {
 
     }
 
-    // ========== ========== ========== ========== ==========
-    // CREATE PART
-    // ========== ========== ========== ========== ==========
-
+    /**
+     * Used by Scenarios:
+     * - Create Part
+     * - Get Part by ID
+     * - Get Part by description
+     * - Get all Parts
+     * - Update Part
+     * - Delete Part
+     */
     @Given("a PartDTO with \\(PartsService.feature)")
     public void givenPartDTO(PartDTO partDTO)
     {
         this.inputPartDTO = partDTO;
     }
 
+    /**
+     * Used by Scenarios:
+     * - Get Part by ID
+     * - Update Part
+     * - Delete Part
+     */
+    @Given("an ID input {int} \\(PartsService.feature)")
+    public void givenIDInput(int id)
+    {
+        this.inputID = (long) id;
+    }
+
+    /**
+     * Used by Scenarios:
+     * - Get Part by description
+     */
+    @Given("a description input {string} \\(PartsService.feature)")
+    public void givenDescriptionInput(String description)
+    {
+        this.inputDescription = description;
+    }
+
+
+
+    // ========== ========== ========== ========== ==========
+    // WHEN steps
+    // ========== ========== ========== ========== ==========
+
+    /**
+     * Used by Scenarios:
+     * - Create Part
+     */
     @When("create Part \\(PartsService.feature)")
-    public void WhenCreatePart()
+    public void whenCreatePart()
     {
         Mockito.when(this.partMapper.toEntity(this.inputPartDTO))
                 .thenReturn(new Part());
@@ -105,31 +157,10 @@ public class PartsServiceTestCase {
         this.partsInRepositoryByDescription.put(this.resultPartDTO.getDescription(), this.resultPartDTO);
     }
 
-    @Then("expect returned PartDTO with \\(PartsService.feature)")
-    public void thenExpectReturnedPartDTO(PartDTO expectedPartDTO)
-    {
-        Assert.assertEquals(expectedPartDTO, this.resultPartDTO);
-    }
-
-    @Then("expect a Part Repository with \\(PartsService.feature)")
-    public void thenExpectPartRepository(List<PartDTO> expectedPartDTOList)
-    {
-        List<PartDTO> resultPartDTOList = new ArrayList<>(this.partsInRepositoryByID.values());
-        Assert.assertEquals(expectedPartDTOList, resultPartDTOList);
-    }
-
-
-
-    // ========== ========== ========== ========== ==========
-    // FIND PART BY ID
-    // ========== ========== ========== ========== ==========
-
-    @Given("an ID input {int} \\(PartsService.feature)")
-    public void givenIDInput(int id)
-    {
-        this.inputID = (long) id;
-    }
-
+    /**
+     * Used by Scenarios:
+     * - Get Part by ID
+     */
     @When("get Part by ID \\(PartsService.feature)")
     public void whenGetPartByID()
     {
@@ -141,18 +172,10 @@ public class PartsServiceTestCase {
         this.resultPartDTO = this.partService.getPartById(this.inputID);
     }
 
-
-    // ========== ========== ========== ========== ==========
-    // FIND PART BY DESCRIPTION
-    // ========== ========== ========== ========== ==========
-
-
-    @Given("a description input {string} \\(PartsService.feature)")
-    public void givenDescriptionInput(String description)
-    {
-        this.inputDescription = description;
-    }
-
+    /**
+     * Used by Scenarios:
+     * - Get Part by description
+     */
     @When("get Part by description \\(PartsService.feature)")
     public void whenGetPartByDescription()
     {
@@ -164,5 +187,60 @@ public class PartsServiceTestCase {
         this.resultPartDTO = this.partService.getPartByDescription(this.inputDescription);
     }
 
+    /**
+     * Used by Scenarios:
+     * - Get all Parts
+     */
+    @When("get all Parts \\(PartsService.feature)")
+    public void whenGetAllParts()
+    {
+        Mockito.when(this.partRepository.findAll())
+                .thenReturn(new ArrayList<Part>());
+        Mockito.when(this.partMapper.toDto(Mockito.anyList()))
+                .thenReturn(new ArrayList<>(this.partsInRepositoryByID.values()));
+
+        this.resultPartDTOList = this.partService.getAllParts();
+    }
+
+
+    // ========== ========== ========== ========== ==========
+    // THEN steps
+    // ========== ========== ========== ========== ==========
+
+    /**
+     * Used by Scenarios:
+     * - Create Part
+     * - Get Part by ID
+     * - Get Part by description
+     * - Update Part
+     */
+    @Then("expect returned PartDTO with \\(PartsService.feature)")
+    public void thenExpectReturnedPartDTO(PartDTO expectedPartDTO)
+    {
+        Assert.assertEquals(expectedPartDTO, this.resultPartDTO);
+    }
+
+    /**
+     * Used by Scenarios:
+     * - Create Part
+     * - Update Part
+     * - Delete Part
+     */
+    @Then("expect a Part Repository with \\(PartsService.feature)")
+    public void thenExpectPartRepository(List<PartDTO> expectedPartDTOList)
+    {
+        List<PartDTO> resultPartDTOList = new ArrayList<>(this.partsInRepositoryByID.values());
+        Assert.assertEquals(expectedPartDTOList, resultPartDTOList);
+    }
+
+    /**
+     * Used by Scenarios:
+     * - Get all Parts
+     */
+    @Then("expect returned PartDTO list with \\(PartsService.feature)")
+    public void thenExpectPartDTOList(List<PartDTO> expectedPartDTOList)
+    {
+        Assert.assertEquals(expectedPartDTOList, this.resultPartDTOList);
+    }
 
 }
