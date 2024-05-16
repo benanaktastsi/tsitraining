@@ -2,10 +2,7 @@ package com.tsi.training.cucumber.dto;
 
 
 import com.tsi.training.dto.PartDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 

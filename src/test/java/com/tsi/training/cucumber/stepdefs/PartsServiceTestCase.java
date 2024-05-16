@@ -1,25 +1,21 @@
 package com.tsi.training.cucumber.stepdefs;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.tsi.training.dto.PartDTO;
 import com.tsi.training.entity.Part;
 import com.tsi.training.mapper.PartMapper;
 import com.tsi.training.repository.PartRepository;
 import com.tsi.training.service.PartService;
 import io.cucumber.java.DataTableType;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.junit.Cucumber;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.*;
 
-import static org.mockito.Mockito.mock;
 
 @RunWith(Cucumber.class)
 public class PartsServiceTestCase {
